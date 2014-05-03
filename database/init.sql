@@ -5,6 +5,7 @@ use wildbook;
 create table wildbook.user (
 	uid int(3) auto_increment not null primary key,
 	username varchar(30) not null,
+	password varchar(30) not null,
 	age int(3) not null,
 	city varchar (30) not null);
 

@@ -23,19 +23,11 @@ while($row = mysql_fetch_array($user_query)) {
 		echo "This username is already taken <br />";
 		$info_accepted = 0;
 	}
-	if(strlen($tempuser) > 30) {
-		echo "This username is too long (30 characters or less) <br />";
-		$info_accepted = 0;		
-	}
 }
 $password = $_POST['password'];
 $password2 = $_POST['password2'];
 if($password != $password2) {
 	echo "The passwords do not match <br />";
-	$info_accepted = 0;
-}
-if(strlen($password) > 30) {
-	echo "Password is too long (30 characters or less) <br />";
 	$info_accepted = 0;
 }
 
@@ -46,20 +38,16 @@ if ($age > 99 || $age < 0) {
 }
 
 $city = $_POST['city'];
-if (strlen($city) > 30) {
-	echo "City name too long (30 characters or less) <br />";
-	$info_accepted = 0;
-}
 
 if($info_accepted == 0) {
 	echo "<a href=\"login.php\">Sign Up</a> <br />";
 }
-else {
-	
+else {	
 	$insert = mysql_query("insert into user (username,password,age,city) values ('$username', '$password', $age, '$city');") 
 	or die('Invalid query: ' . mysql_error());
-	echo "<a href=\"home.php\">Profile Created!</a> <br />";
+	echo "<a href=\"home.php?username=$username\">Profile Created!</a>";
 }
+mysql_close($link); 
 ?>
 </body>
 </html>

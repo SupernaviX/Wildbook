@@ -6,15 +6,16 @@
 <h4>Create Profile</h4>
 
 <?php
-$link = mysql_connect('localhost','root','password'); 
+include 'functions.php';
+$link = connect_wildbook();
+
+/*$link = mysql_connect('localhost','root','password'); 
 if (!$link) { 
 	die('Could not connect to MySQL: ' . mysql_error()); 
 } 
 $wildbook = mysql_select_db('wildbook',$link) or die("Could not select wildbook" . mysql_error());
 
-$info_accepted = 1;
 
-$username = $_POST['username'];
 $user_query = mysql_query("SELECT username from user") 
 	or die('Invalid query: ' . mysql_error());
 while($row = mysql_fetch_array($user_query)) {
@@ -23,7 +24,15 @@ while($row = mysql_fetch_array($user_query)) {
 		echo "This username is already taken <br />";
 		$info_accepted = 0;
 	}
+}*/
+$info_accepted = 1;
+$username = $_POST['username'];
+if (user_exists($username)) {
+	echo "This username is already taken <br />";
+	$info_accepted = 0;
 }
+
+
 $password = $_POST['password'];
 $password2 = $_POST['password2'];
 if($password != $password2) {

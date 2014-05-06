@@ -1,24 +1,24 @@
 <html>
 <head>
-<title>Wildbook</title>
+<title>Wildbook</title> <!-- we should separate this boilerplate into a function -->
 </head>
 <body>
 <h4>Login</h4>
 
 <form action="login.php" method="post"> 
 username: <input name="username" type="text" maxlength="30"/> 
-password : <input name="password" type="text" maxlength="30"/>
+password : <input name="password" type="password" maxlength="30"/> <!-- no reason to force users to use a short password -->
 <input type="submit" />
 </form>
 <?php
 if( isset($_POST['username']) && isset($_POST['password']) ) {
-	$link = mysql_connect('localhost','root','password'); 
+	$link = mysql_connect('localhost','root','password'); // This should use mysqli
 	if (!$link) { 
 		die('Could not connect to MySQL: ' . mysql_error()); 
 	} 
 	$wildbook = mysql_select_db('wildbook',$link) or die("Could not select wildbook" . mysql_error());
 
-	$info_accepted = 1;
+	$info_accepted = 1;//booleans
 
 	$username = $_POST['username'];
 	$user_query = mysql_query("select username from user;") 
@@ -35,7 +35,7 @@ if( isset($_POST['username']) && isset($_POST['password']) ) {
 	}
 	else {
 		$password = $_POST['password'];
-		$pass_query = mysql_query("SELECT password from user where username = '$username'") 
+		$pass_query = mysql_query("SELECT password from user where username = '$username'") //fix
 		or die('Invalid query: ' . mysql_error());
 		while($row = mysql_fetch_array($pass_query)) {
 			$temppass = $row['password'];
@@ -51,8 +51,9 @@ if( isset($_POST['username']) && isset($_POST['password']) ) {
 	else {
 		echo "Username/password invalid, try again";
 	}
+	mysql_close($link); 
 }
-mysql_close($link); 
+
 ?>
 
 <br><br><br>

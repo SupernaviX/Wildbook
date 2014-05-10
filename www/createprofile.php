@@ -20,11 +20,11 @@ while($row = mysql_fetch_array($user_query)) {
 		$info_accepted = 0;
 	}
 }*/
-$info_accepted = 1;
+$info_accepted = true;
 $username = $_POST['username'];
 if (user_exists($username)) {
 	echo "This username is already taken <br />";
-	$info_accepted = 0;
+	$info_accepted = false;
 }
 
 
@@ -32,26 +32,32 @@ $password = $_POST['password'];
 $password2 = $_POST['password2'];
 if($password != $password2) {
 	echo "The passwords do not match <br />";
-	$info_accepted = 0;
+	$info_accepted = false;
 }
 
 $age = $_POST['age'];
 if ($age > 99 || $age < 0) {
 	echo "Age is not valid <br />";
-	$info_accepted = 0;
+	$info_accepted = false;
 }
 
 $city = $_POST['city'];
 
-if($info_accepted == 0) {
+if(!$info_accepted) {
 	echo "<a href=\"login.php\">Sign Up</a> <br />";
 }
-else {	
-	$insert = mysql_query("insert into user (username,password,age,city) values ('$username', '$password', $age, '$city');") 
-	or die('Invalid query: ' . mysql_error());
-	echo "<a href=\"home.php?username=$username\">Profile Created!</a>";
+else {
+	$passhash = password_hash($password, PASSWORD_DEFAULT);
+	$link = connect_wildbook();
+	$insert = $link->prepare("INSERT INTO `user` (`username`, `passhash`, `age`, `city`) values (?, ?, ?, ?);");
+	if (!$insert)
+		echo "Prepare failed: (" . $link->errno . ") " . $link->error;
+	$insert->bind_param("ssis", $username, $passhash, $age, $city);
+	if (!$insert->execute())
+		echo "Execute failed: (" . $link->errno . ") " . $link->error;
+	login($username, $insert->insert_id);
+	echo "<a href=\"home.php\">Profile Created!</a>";
 }
-mysql_close($link); 
 
 end_page();
 ?>

@@ -1,7 +1,10 @@
 <?php
 
 function connect_wildbook() {
-	$wildbook = new mysqli('localhost','root','password', 'wildbook');
+	$connections = parse_ini_file(realpath("../database/connections.ini"), true);
+	$connection_name = $connections["connections"]["use"];
+	$connection = $connections[$connection_name];
+	$wildbook = new mysqli($connection["host"], $connection["username"], $connection["passwd"], $connection["dbname"]);
 	if (!$wildbook) { 
 		echo('Could not connect to MySQL: ' . $wildbook->connect_errno);
 	} 
@@ -20,6 +23,4 @@ function login($username, $uid) {
 	$_SESSION['current_user_name'] = $username;
 	$_SESSION['current_user_id'] = $uid;
 }
-
-
 ?>

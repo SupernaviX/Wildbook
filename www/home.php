@@ -1,43 +1,28 @@
-
 <?php
 	include_once "template.php";
 	begin_page("Home");
 ?>
 <h4>Home</h4>
-<?php
-$username = $_GET['username'];
-session_start();
-$_SESSION['username'] = $username;
 
-
-$link = mysql_connect('localhost','root','password'); 
-if (!$link) { 
-	die('Could not connect to MySQL: ' . mysql_error()); 
-} 
-$wildbook = mysql_select_db('wildbook',$link) or die("Could not select wildbook" . mysql_error());
-
-$uid_query = mysql_query("select uid from user where username = '$username';") 
-		or die('Invalid query: ' . mysql_error());
-$row = mysql_fetch_array($uid_query);
-$uid = $row['uid'];
-?>
 <form action="profile.php" method="post"> 
 username: <input name="search_username" type="text" maxlength="30"/> 
 <input type="submit" />
 </form>
 
 <?php
+	echo "Your Friends <br> ------------------------------------------------- <br>";
+	$wildbook = connect_wildbook();
+	$friend_query = $wildbook->prepare("SELECT `username` FROM `user` WHERE `uid` = (SELECT `seconduid` FROM `friend` WHERE `firstuid` = ?);");
+	$friend_query->bind_param("i", $_SESSION["current_user_id"]);
+	$friend_query->execute();
+	$friend_query->bind_result($username);
+	while ($friend_query->fetch()) {
+		echo "$username <br>";
+	}
 
-echo "Your Friends <br> ------------------------------------------------- <br>";
-$friend_query = mysql_query("select username from user where uid = (select seconduid from friend where firstuid = uid);") 
-		or die('Invalid query: ' . mysql_error());
-while ($row = mysql_fetch_array($friend_query)) {
- $friend = $row['username'];
- echo "$friend <br>";
-}
-
-echo "Add a Diary Post <br>";
+	echo "Add a Diary Post <br>";
 ?>
+
 <form action="adddiarypost.php" method="post"> 
 title: <input name="title" type="text" maxlength="30"/> 
 content : <input name="content" type="text" maxlength="30"/>
@@ -48,19 +33,19 @@ content : <input name="content" type="text" maxlength="30"/>
 <option value ="4">Everyone</option>
 <input type="submit" />
 </form>
-<?php
-echo "Your timeline <br> ---------------------------------------------<br> ";
-$diary_query = mysql_query("select * from diarypost where posteruid = $uid;") 
-		or die('Invalid query: ' . mysql_error());
-while ($row = mysql_fetch_array($diary_query)) {
-	echo $row['title']; echo "<br>";
-	echo $row['timestamp']; echo "<br>";
-	echo $row['content']; echo "<br>";
-	$lid = $row['lid'];
-	$privacy = $row['privacy'];
-	echo "-----------------------------------------------<br>";
-}
-mysql_close($link); 
 
-end_page();
+<?php
+	echo "Your timeline <br> ---------------------------------------------<br> ";
+	$diary_query = $wildbook->prepare("SELECT `title`, `timestamp`, `content`, `lid`, `privacy` FROM diarypost WHERE `posteruid` = ?;");
+	$diary_query->bind_param("i", $_SESSION["current_user_id"]);
+	$diary_query->execute();
+	$diary_query->bind_result($title, $timestamp, $content, $lid, $privacy);
+	while ($diary_query->fetch()) {
+		echo $title; echo "<br>";
+		echo $timestamp; echo "<br>";
+		echo $content; echo "<br>";
+		echo "-----------------------------------------------<br>";
+	}
+
+	end_page();
 ?>

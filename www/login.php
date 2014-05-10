@@ -1,8 +1,8 @@
-<html>
-<head>
-<title>Wildbook</title> <!-- we should separate this boilerplate into a function -->
-</head>
-<body>
+<?php
+	include_once "template.php";
+	begin_page("Login");
+?>
+
 <h4>Login</h4>
 
 <form action="login.php" method="post"> 
@@ -67,8 +67,4 @@ city : <input name="city" type="text" maxlength="30"/><br>
 <input type="submit" />
 </form>
 
-
-
-
-</body>
-</html>
+<?php end_page(); ?>

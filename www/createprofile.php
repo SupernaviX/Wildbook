@@ -1,13 +1,8 @@
-<html>
-<head>
-<title>Wildbook</title>
-</head>
-<body>
-<h4>Create Profile</h4>
-
 <?php
-include 'functions.php';
-$link = connect_wildbook();
+include 'template.php';
+begin_page("Wildbook");
+
+echo '<h4>Create Profile</h4>';
 
 /*$link = mysql_connect('localhost','root','password'); 
 if (!$link) { 
@@ -57,6 +52,6 @@ else {
 	echo "<a href=\"home.php?username=$username\">Profile Created!</a>";
 }
 mysql_close($link); 
+
+end_page();
 ?>
-</body>
-</html>

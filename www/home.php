@@ -1,10 +1,9 @@
-<html>
-<head>
-<title>Wildbook</title>
-</head>
-<body>
-<h4>Home</h4>
 
+<?php
+	include_once "template.php";
+	begin_page("Home");
+?>
+<h4>Home</h4>
 <?php
 $username = $_GET['username'];
 session_start();
@@ -62,7 +61,6 @@ while ($row = mysql_fetch_array($diary_query)) {
 	echo "-----------------------------------------------<br>";
 }
 mysql_close($link); 
-?>
-</body>
 
-</html>
+end_page();
+?>

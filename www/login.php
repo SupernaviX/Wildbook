@@ -19,10 +19,10 @@ if( isset($_POST['username']) && isset($_POST['password']) ) {
 	$password = $_POST['password'];
 
 	if (!($pass_query = $wildbook->prepare("SELECT `uid`, `passhash` FROM `user` WHERE `username` = ?")))
-		echo "Prepare failed: (" . $link->errno . ") " . $link->error;
+		echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
 	$pass_query->bind_param("s", $username);
 	if (!($pass_query->execute()))
-		echo "Execute failed: (" . $link->errno . ") " . $link->error;
+		echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
 	$pass_query->bind_result($uid, $stored_passhash);
 	if ($pass_query->fetch() && password_verify($password, $stored_passhash))
 		header("location:home.php");

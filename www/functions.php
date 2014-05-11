@@ -80,6 +80,16 @@ function check_friend($firstuid,$seconduid) {
 	return($chk_friend->fetch());		
 }
 
+/*returns if a post is visible to viewer*/
+function visible($firstuid,$seconduid,$privacy) {
+	if($privacy == 1) {	// private
+		if ($firstuid != $seconduid) return false;
+		else return true;
+	}
+	else if ($prviacy == 2) {
+		
+	}
+}
 
 
 ?>

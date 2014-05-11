@@ -106,3 +106,7 @@ create view accepted_friends as
 	from friend f1, friend f2
 	where f1.firstuid=f2.seconduid and f1.seconduid=f2.firstuid;
 	
+create view FOF as
+	select a1.firstuid as firstuid, a2.seconduid as seconduid
+	from accepted_friends a1, accepted_friends a2
+	where a1.seconduid = a2.firstuid and a1.firstuid != a2.seconduid;

@@ -1,5 +1,6 @@
 <?php
 include_once "functions.php";
+include_once "partials.php";
 function begin_page($title) {
 	session_start();
 	echo "<html><head><title>$title</title></head><body>";

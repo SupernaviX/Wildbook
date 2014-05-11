@@ -38,35 +38,8 @@ username: <input name="search_username" type="text" maxlength="30"/>
 	}
 
 	echo "Add a Diary Post <br>";
-?>
+	display_diary_post_submission_form();
 
-<form enctype="multipart/form-data" action="adddiarypost.php" method="post"> 
-<label name="title">Title:</label>
-<input name="title" type="text" maxlength="30"/>
-<label name="content">Content:</label>
-<textarea name="content"></textarea>
-<label name="privacy">Share with:</label>
-<select name="privacy">
-	<option value ="1">Private</option>
-	<option value ="2">Friends</option>
-	<option value ="3">Friends of Friends</option>
-	<option value ="4">Everyone</option>
-</select>
-<br />
-<label name="photos[]">Photos:</label>
-<input name="photos[]" type="file" accept="image/*" multiple="multiple"/>
-<br />
-<label name="videos[]">Videos:</label>
-<input name="videos[]" type="file" accept="video/*" multiple="multiple"/>
-<br />
-<label name="audio[]">Audio:</label>
-<input name="audio[]" type="file" accept="audio/*" multiple="multiple"/>
-
-<br />
-<input type="submit" />
-</form>
-
-<?php
 	echo "Your timeline <br> ---------------------------------------------<br> ";
 	$diary_query = $wildbook->prepare("SELECT `did`, `title`, `timestamp`, `content`, `lid`, `privacy` FROM diarypost WHERE `posteruid` = ?;");
 

@@ -1,6 +1,5 @@
 <?php
 	include_once "template.php";
-	include_once "partials.php";
 	begin_page("Wildbook");
 	$username = $_SESSION['current_user_name'];
 	if( isset($_POST['search_username']) ) {

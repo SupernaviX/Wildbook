@@ -41,4 +41,67 @@
 
 		echo "</div>";
 	}
+
+
+	function display_diary_post_submission_form($title = "", $content = "", $privacy = 2, $errors = array()) {
+		echo '<form enctype="multipart/form-data" action="adddiarypost.php" method="post">';
+
+		echo '<label name="title">Title:</label>'
+			.'<input name="title" type="text" maxlength="30" value="'. $title .'" />'
+			.list_errors($errors["title"])
+			.'<br />';
+
+		echo '<label name="content">Content:</label>'
+			.'<textarea name="content">' . $content .'</textarea>'
+			.list_errors($errors["content"])
+			.'<br />';
+
+		echo '<label name="privacy">Share with:</label>'
+			.'<select name="privacy">'
+			.select_option(1, "Private", $privacy)
+			.select_option(2, "Friends", $privacy)
+			.select_option(3, "Friends of Friends", $privacy)
+			.select_option(4, "Everyone", $privacy)
+			.'</select>'
+			.list_errors($errors["privacy"])
+			.'<br />';
+
+		echo '<label name="photos[]">Photos:</label>'
+			.'<input name="photos[]" type="file" accept="image/*" multiple="multiple"/>'
+			.list_errors($errors["photos[]"])
+			.'<br />';
+
+		echo '<label name="videos[]">Videos:</label>'
+			.'<input name="videos[]" type="file" accept="video/*" multiple="multiple"/>'
+			.list_errors($errors["videos[]"])
+			.'<br />';
+
+		echo '<label name="audio[]">Audio:</label>'
+			.'<input name="audio[]" type="file" accept="audio/*" multiple="multiple"/>'
+			.list_errors($errors["audio[]"])
+			.'<br />';
+
+		echo '<input type="submit" />';
+		echo '</form>';
+	}
+
+	function list_errors($error_list) {
+		if (empty($error_list))
+			return '';
+		$result = "<ul>";
+		foreach ($error_list as $error) {
+			$result .= "<li>$error</li>";
+		}
+		$result .= "</ul>";
+		return $result;
+	}
+
+	function select_option($value, $name, $selected) {
+		if ($value === $selected) {
+			return "<option value=\"$value\" selected=\"selected\">$name</option>";
+		} else {
+			return "<option value=\"$value\">$name</option>";
+		}
+	}
+
 ?>

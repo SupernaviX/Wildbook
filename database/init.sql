@@ -94,3 +94,9 @@ create table wildbook.diarylike (
 	primary key(uid,did),
 	foreign key (did) references diarypost(did),
 	foreign key (uid) references user(uid) );
+	
+create view accepted_friends as
+	select f1.firstuid, f1.seconduid
+	from friend f1, friend f2
+	where f1.firstuid=f2.seconduid and f1.seconduid=f2.firstuid;
+	

@@ -51,7 +51,7 @@
 			$make_post->execute();
 			$did = $make_post->insert_id;
 
-			if (!empty($_FILES["photos"]['tmp_name'])) {
+			if (!empty($_FILES["photos"]['tmp_name'] && !empty($_FILES["photos"]['tmp_name'][0]))) {
 				$file_count = count($_FILES["photos"]['tmp_name']);
 				$upload_photo = $wildbook->prepare('INSERT INTO `photo` (`did`, `content`, `content_type`, `privacy`) VALUES (?, ?, ?, ?)');
 				for ($index = 0; $index < $file_count; ++$index) {
@@ -62,7 +62,7 @@
 				}
 			}
 
-			if (!empty($_FILES["videos"]['tmp_name'])) {
+			if (!empty($_FILES["videos"]['tmp_name'] && !empty($_FILES["videos"]['tmp_name'][0]))) {
 				$file_count = count($_FILES["videos"]['tmp_name']);
 				$upload_video = $wildbook->prepare('INSERT INTO `video` (`did`, `content`, `content_type`, `privacy`) VALUES (?, ?, ?, ?)');
 				for ($index = 0; $index < $file_count; ++$index) {
@@ -73,7 +73,7 @@
 				}
 			}
 
-			if (!empty($_FILES["audio"]['tmp_name'])) {
+			if (!empty($_FILES["audio"]['tmp_name'] && !empty($_FILES["audio"]['tmp_name'][0]))) {
 				$file_count = count($_FILES["audio"]['tmp_name']);
 				$upload_audio = $wildbook->prepare('INSERT INTO `audio` (`did`, `content`, `content_type`, `privacy`) VALUES (?, ?, ?, ?)');
 				for ($index = 0; $index < $file_count; ++$index) {

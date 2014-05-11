@@ -23,6 +23,24 @@
 				}
 			}
 		}
+		if (!empty($_FILES["audio"])) {
+			$audio_upload_error = false;
+			foreach ($_FILES["audio"]["errors"] as $error) {
+				if ($error > 0) {
+					$audio_upload_error = true;
+					$errors["audio[]"][] = "Error uploading an audio file.";
+				}
+			}
+		}
+		if (!empty($_FILES["videos"])) {
+			$video_upload_error = false;
+			foreach ($_FILES["videos"]["errors"] as $error) {
+				if ($error > 0) {
+					$video_upload_error = true;
+					$errors["videos[]"][] = "Error uploading a video.";
+				}
+			}
+		}
 		if (empty($errors)) {
 			$wildbook = connect_wildbook();
 			$make_post = $wildbook->prepare(
@@ -33,7 +51,7 @@
 			$make_post->execute();
 			$did = $make_post->insert_id;
 
-			if (!empty($_FILES["photos"])) {
+			if (!empty($_FILES["photos"]['tmp_name'])) {
 				$file_count = count($_FILES["photos"]['tmp_name']);
 				$upload_photo = $wildbook->prepare('INSERT INTO `photo` (`did`, `content`, `content_type`, `privacy`) VALUES (?, ?, ?, ?)');
 				for ($index = 0; $index < $file_count; ++$index) {
@@ -43,6 +61,30 @@
 					$upload_photo->execute();
 				}
 			}
+
+			if (!empty($_FILES["videos"]['tmp_name'])) {
+				$file_count = count($_FILES["videos"]['tmp_name']);
+				$upload_video = $wildbook->prepare('INSERT INTO `video` (`did`, `content`, `content_type`, `privacy`) VALUES (?, ?, ?, ?)');
+				for ($index = 0; $index < $file_count; ++$index) {
+					$contents = file_get_contents($_FILES["videos"]['tmp_name'][$index]);
+					$content_type = $_FILES["videos"]['type'][$index];
+					$upload_video->bind_param("issi", $did, $contents, $content_type, $privacy);
+					$upload_video->execute();
+				}
+			}
+
+			if (!empty($_FILES["audio"]['tmp_name'])) {
+				$file_count = count($_FILES["audio"]['tmp_name']);
+				$upload_audio = $wildbook->prepare('INSERT INTO `audio` (`did`, `content`, `content_type`, `privacy`) VALUES (?, ?, ?, ?)');
+				for ($index = 0; $index < $file_count; ++$index) {
+					$contents = file_get_contents($_FILES["audio"]['tmp_name'][$index]);
+					$content_type = $_FILES["audio"]['type'][$index];
+					$upload_audio->bind_param("issi", $did, $contents, $content_type, $privacy);
+					$upload_audio->execute();
+				}
+			}
+
+			header("location:home.php");
 		}
 	}
 
@@ -71,10 +113,12 @@
 	<label name="title">Title:</label>
 	<input name="title" type="text" maxlength="30" value="<?php echo $title ?>" />
 	<?php list_errors($errors["title"]) ?>
+	<br />
 
 	<label name="content">Content:</label>
 	<textarea name="content"><?php echo $content ?></textarea>
 	<?php list_errors($errors["content"]) ?>
+	<br />
 
 	<label name="privacy">Share with:</label>
 	<select name="privacy">
@@ -83,13 +127,26 @@
 		select_option(2, "Friends", $privacy);
 		select_option(3, "Friends of Friends", $privacy);
 		select_option(4, "Everyone", $privacy);
+
 	?>
 	</select>
 	<?php list_errors($errors["privacy"]); ?>
+	<br />
 
 	<label name="photos[]">Photos:</label>
 	<input name="photos[]" type="file" accept="image/*" multiple="multiple"/>
 	<?php list_errors($errors["photos[]"]); ?>
+	<br />
+
+	<label name="videos[]">Videos:</label>
+	<input name="videos[]" type="file" accept="video/*" multiple="multiple"/>
+	<?php list_errors($errors["videos[]"]); ?>
+	<br />
+
+	<label name="audio[]">Audio:</label>
+	<input name="audio[]" type="file" accept="audio/*" multiple="multiple"/>
+	<?php list_errors($errors["audio[]"]); ?>
+	<br />
 
 	<input type="submit" />
 </form>

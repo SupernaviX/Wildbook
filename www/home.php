@@ -51,8 +51,17 @@ username: <input name="search_username" type="text" maxlength="30"/>
 	<option value ="3">Friends of Friends</option>
 	<option value ="4">Everyone</option>
 </select>
+<br />
 <label name="photos[]">Photos:</label>
 <input name="photos[]" type="file" accept="image/*" multiple="multiple"/>
+<br />
+<label name="videos[]">Videos:</label>
+<input name="videos[]" type="file" accept="video/*" multiple="multiple"/>
+<br />
+<label name="audio[]">Audio:</label>
+<input name="audio[]" type="file" accept="audio/*" multiple="multiple"/>
+
+<br />
 <input type="submit" />
 </form>
 
@@ -60,7 +69,8 @@ username: <input name="search_username" type="text" maxlength="30"/>
 	echo "Your timeline <br> ---------------------------------------------<br> ";
 	$diary_query = $wildbook->prepare("SELECT `did`, `title`, `timestamp`, `content`, `lid`, `privacy` FROM diarypost WHERE `posteruid` = ?;");
 
-	$diary_query->bind_param("i", user_id());
+	$uid = user_id();
+	$diary_query->bind_param("i", $uid);
 	$diary_query->execute();
 	$diary_query->store_result();
 	$diary_query->bind_result($did, $title, $timestamp, $content, $lid, $privacy);
@@ -77,8 +87,30 @@ username: <input name="search_username" type="text" maxlength="30"/>
 		$photo_query->bind_result($pid);
 
 		while($photo_query->fetch()) {
-			echo "<img src=\"image.php?id=$pid\" style=\"max-width: 100%\"/>";
+			echo "<img src=\"image.php?id=$pid\" style=\"max-width: 100%\"/><br/>";
 		}
+
+		if (!isset($video_query))
+			$video_query = $wildbook->prepare("SELECT `vid`, `content_type` FROM `video` WHERE `did` = ?");
+		$video_query->bind_param("i", $did);
+		$video_query->execute();
+		$video_query->bind_result($vid, $content_type);
+
+		while($video_query->fetch()) {
+			echo "<video controls><source src=\"video.php?id=$vid\" type=\"$content_type\"></video><br/>";
+		}
+
+
+		if (!isset($audio_query))
+			$audio_query = $wildbook->prepare("SELECT `aid`, `content_type` FROM `audio` WHERE `did` = ?");
+		$audio_query->bind_param("i", $did);
+		$audio_query->execute();
+		$audio_query->bind_result($aid, $content_type);
+
+		while($audio_query->fetch()) {
+			echo "<audio controls><source src=\"audio.php?id=$aid\" type=\"$content_type\"></audio><br/>";
+		}
+
 		echo "</div>";
 		echo "-----------------------------------------------<br>";
 	}

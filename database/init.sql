@@ -81,12 +81,18 @@ create table wildbook.photo (
 	foreign key (did) references diarypost(did));
 create table wildbook.audio (
 	aid int(3) auto_increment primary key not null,
-	content blob not null,
-	privacy int(1) not null);
+	did int(3) not null,
+	content mediumblob not null,
+	content_type varchar(30) not null,
+	privacy int(1) not null,
+	foreign key (did) references diarypost(did));
 create table wildbook.video (
 	vid int(3) auto_increment primary key not null,
-	content blob not null,
-	privacy int(1) not null);
+	did int(3) not null,
+	content mediumblob not null,
+	content_type varchar(30) not null,
+	privacy int(1) not null,
+	foreign key (did) references diarypost(did));
 
 create table wildbook.diarylike (
 	uid int(3) not null,

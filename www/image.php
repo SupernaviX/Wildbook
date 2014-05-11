@@ -4,8 +4,7 @@
 
 	if (isset($_GET["id"])) {
 		$wildbook = connect_wildbook();
-		//TODO: permissions
-		$get_image = $wildbook->prepare('SELECT `content`, `content_type` FROM `photo` WHERE pid = ?');
+		$get_image = $wildbook->prepare('SELECT `content`, `content_type` FROM `photo` WHERE `pid` = ?');
 		$get_image->bind_param("i", $_GET["id"]);
 		$get_image->execute();
 		$get_image->bind_result($content, $content_type);

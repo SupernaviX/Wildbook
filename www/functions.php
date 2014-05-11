@@ -23,4 +23,12 @@ function login($username, $uid) {
 	$_SESSION['current_user_name'] = $username;
 	$_SESSION['current_user_id'] = $uid;
 }
+
+function user_id() {
+	return $_SESSION['current_user_id'];
+}
+
+function user_name() {
+	return $_SESSION['current_user_name'];
+}
 ?>

@@ -13,7 +13,7 @@ username: <input name="search_username" type="text" maxlength="30"/>
 	echo "Your Friends <br> ------------------------------------------------- <br>";
 	$wildbook = connect_wildbook();
 	$friend_query = $wildbook->prepare("SELECT `username` FROM `user` WHERE `uid` = (SELECT `seconduid` FROM `friend` WHERE `firstuid` = ?);");
-	$friend_query->bind_param("i", $_SESSION["current_user_id"]);
+	$friend_query->bind_param("i", user_id());
 	$friend_query->execute();
 	$friend_query->bind_result($username);
 	while ($friend_query->fetch()) {
@@ -37,7 +37,7 @@ content : <input name="content" type="text" maxlength="30"/>
 <?php
 	echo "Your timeline <br> ---------------------------------------------<br> ";
 	$diary_query = $wildbook->prepare("SELECT `title`, `timestamp`, `content`, `lid`, `privacy` FROM diarypost WHERE `posteruid` = ?;");
-	$diary_query->bind_param("i", $_SESSION["current_user_id"]);
+	$diary_query->bind_param("i", user_id());
 	$diary_query->execute();
 	$diary_query->bind_result($title, $timestamp, $content, $lid, $privacy);
 	while ($diary_query->fetch()) {

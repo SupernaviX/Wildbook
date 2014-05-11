@@ -1,5 +1,7 @@
 <?php
-session_destroy();
+session_start();
+include "functions.php";
+logout();
 header('Location:login.php');
 
 

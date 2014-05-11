@@ -101,6 +101,16 @@ function visible($firstuid,$seconduid,$privacy) {
 	}
 	else {return true;}	//visible to everyone
 }
-
-
+/*returns the distance between two users*/
+function distance($firstuid, $seconduid) {
+	$wildbook = connect_wildbook();
+	$fof_query = $wildbook->prepare("SELECT 1 FROM `fof` WHERE `firstuid` = ? and `seconduid`= ?;");
+	$fof_query->bind_param("ii",$firstuid,$seconduid);
+	$fof_query->execute();
+	
+	if ($firstuid == $seconduid) return 1;
+	else if (check_friend($firstuid,$seconduid)) return 2;
+	else if ($fof_query->fetch()) return 3;
+	else return 4;
+}
 ?>

@@ -34,14 +34,13 @@
 			$wildbook = connect_wildbook();
 			$friend_query = $wildbook->prepare("select seconduid, privacy from friend f where f.firstuid = ?;");
 			if(!$friend_query) echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
-			$uid = $search_uid;
-			$friend_query->bind_param("i", $uid);
+			$friend_query->bind_param("i", $search_uid);
 			if (!$friend_query->execute()) echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
 			$friend_query->bind_result($friend_uid,$privacy);
 			while ($friend_query->fetch()) {
 				if(visible($_SESSION['current_user_id'],$search_uid,$privacy)) {	
 					$username = get_username($friend_uid);
-					echo "<a href=\"profile.php?search=$username\">$username</a><br>";
+					echo "<a href=\"profile.php?search=$username\">$username</a> <br>";
 				}
 			}
 		}

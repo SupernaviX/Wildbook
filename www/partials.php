@@ -3,15 +3,10 @@
 
 	//Displays a diary post.
 	function display_diary_post($did, $postername, $title, $timestamp, $content) {
-		static $photo_query = NULL;
-		static $video_query = NULL;
-		static $audio_query = NULL;
-		if (is_null($photo_query) || is_null($video_query) || is_null($audio_query)) {
-			$wildbook = connect_wildbook();
-			$photo_query = $wildbook->prepare('SELECT `pid` FROM `photo` WHERE `did` = ?');
-			$video_query = $wildbook->prepare('SELECT `vid` FROM `video` WHERE `did` = ?');
-			$audio_query = $wildbook->prepare('SELECT `aid` FROM `audio` WHERE `did` = ?');
-		}
+		$wildbook = connect_wildbook();
+		$photo_query = $wildbook->prepare('SELECT `pid` FROM `photo` WHERE `did` = ?');
+		$video_query = $wildbook->prepare('SELECT `vid` FROM `video` WHERE `did` = ?');
+		$audio_query = $wildbook->prepare('SELECT `aid` FROM `audio` WHERE `did` = ?');
 
 		echo "<div style=\"max-width: 75%\">";
 		echo $title; echo "<br>";

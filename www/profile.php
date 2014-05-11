@@ -1,5 +1,6 @@
 <?php
 	include_once "template.php";
+	include_once "partials.php";
 	begin_page("Wildbook");
 	$username = $_SESSION['current_user_name'];
 	if( isset($_POST['search_username']) ) {
@@ -42,6 +43,22 @@
 					$username = get_username($friend_uid);
 					echo "<a href=\"profile.php?search=$username\">$username</a> <br>";
 				}
+			}
+
+			echo "Posts <br> ------------------------------------------------- <br>";
+			$uid = user_id();
+			$distance = distance($uid, $search_uid);
+			$post_query = $wildbook->prepare('SELECT `did`, `username`, `title`, `timestamp`, `content` '
+				.'FROM `diarypost` `dp` '
+				.'JOIN `user` `u` ON `dp`.`posteruid` = `u`.`uid` '
+				.'WHERE `posteeuid` = ? AND `privacy` >= ? '
+				.'ORDER BY `timestamp` DESC;');
+			$post_query->bind_param("ii", $search_uid, $privacy);
+			$post_query->execute();
+			$post_query->bind_result($did, $username, $title, $timestamp, $content);
+			while ($post_query->fetch()) {
+				display_diary_post($did, $username, $title, $timestamp, $content);
+				echo "------------------------------------------------- <br>";
 			}
 		}
 		else {

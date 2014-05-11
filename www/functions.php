@@ -80,14 +80,14 @@ function check_friend($firstuid,$seconduid) {
 	return($chk_friend->fetch());		
 }
 
-/*returns if a post is visible to viewer*/
+/*returns if a post is visible to viewer (firstuid is viewer, seconduid is owner of post/friendship, privacy is set by seconduid */
 function visible($firstuid,$seconduid,$privacy) {
 	if($privacy == 1) {	// private
 		if ($firstuid != $seconduid) return false;
 		else return true;
 	}
 	else if ($privacy == 2) {	// visible to friends only
-		if(check_friend($firstuid,$seconduid)) return true;
+		if(check_friend($firstuid,$seconduid) or $firstuid == $seconduid) return true;
 		else return false;
 	}
 	else if ($privacy == 3) {
@@ -96,7 +96,7 @@ function visible($firstuid,$seconduid,$privacy) {
 		if(!$fof_query) echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
 		$fof_query->bind_param("ii",$firstuid,$seconduid);
 		if (!$fof_query->execute()) echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
-		if($fof_query->fetch()) return true;
+		if($fof_query->fetch() or check_friend($firstuid,$seconduid) or $firstuid == $seconduid) return true;
 		else return false;
 	}
 	else {return true;}	//visible to everyone

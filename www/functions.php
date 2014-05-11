@@ -86,9 +86,20 @@ function visible($firstuid,$seconduid,$privacy) {
 		if ($firstuid != $seconduid) return false;
 		else return true;
 	}
-	else if ($prviacy == 2) {
-		
+	else if ($prviacy == 2) {	// visible to friends only
+		if(check_friend($firstuid,$seconduid) return true;
+		else return false;
 	}
+	else if ($privacy == 3) {
+		$wildbook = connect_wildbook();
+		$fof_query = $wildbook->prepare("SELECT 1 FROM `fof` WHERE `firstuid` = ? and `seconduid`= ?;");
+		if(!$fof_query) echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
+		$fof_query->bind_param("ii",$firstuid,$seconduid);
+		if (!$fof_query->execute()) echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
+		if($fof_query->fetch()) return true;
+		else return false;
+	}
+	else {return true;}	//visible to everyone
 }
 
 

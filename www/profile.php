@@ -28,6 +28,22 @@
 			</select>
 			</form>
 			<?php
+			
+			/*display all of a users friends*/
+			echo "Friends <br> ------------------------------------------------- <br>";
+			$wildbook = connect_wildbook();
+			$friend_query = $wildbook->prepare("SELECT `username`,`privacy` FROM `user` u,`friend` f WHERE u.uid=f.firstuid and u.uid = (SELECT `seconduid` FROM `accepted_friends` WHERE `firstuid` = ?);");
+			if(!$friend_query) echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
+			$uid = $search_uid;
+			$friend_query->bind_param("i", $uid);
+			if (!$friend_query->execute()) echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
+			$friend_query->bind_result($username,$privacy);
+			while ($friend_query->fetch()) {
+				echo "<a href=\"profile.php?search=$username\">$username</a> $privacy <br>";
+			}
+			
+			
+			
 		}
 		else {
 			echo "User does not exist";

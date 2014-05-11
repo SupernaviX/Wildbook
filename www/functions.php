@@ -86,8 +86,8 @@ function visible($firstuid,$seconduid,$privacy) {
 		if ($firstuid != $seconduid) return false;
 		else return true;
 	}
-	else if ($prviacy == 2) {	// visible to friends only
-		if(check_friend($firstuid,$seconduid) return true;
+	else if ($privacy == 2) {	// visible to friends only
+		if(check_friend($firstuid,$seconduid)) return true;
 		else return false;
 	}
 	else if ($privacy == 3) {

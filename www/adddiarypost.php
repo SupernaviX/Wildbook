@@ -31,6 +31,18 @@
 			$uid = user_id();
 			$make_post->bind_param("iissi", $uid, $uid, $title, $content, $privacy);
 			$make_post->execute();
+			$did = $make_post->insert_id;
+
+			if (!empty($_FILES["photos"])) {
+				$file_count = count($_FILES["photos"]['tmp_name']);
+				$upload_photo = $wildbook->prepare('INSERT INTO `photo` (`did`, `content`, `content_type`, `privacy`) VALUES (?, ?, ?, ?)');
+				for ($index = 0; $index < $file_count; ++$index) {
+					$contents = file_get_contents($_FILES["photos"]['tmp_name'][$index]);
+					$content_type = $_FILES["photos"]['type'][$index];
+					$upload_photo->bind_param("issi", $did, $contents, $content_type, $privacy);
+					$upload_photo->execute();
+				}
+			}
 		}
 	}
 

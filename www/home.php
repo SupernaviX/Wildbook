@@ -42,14 +42,28 @@ username: <input name="search_username" type="text" maxlength="30"/>
 
 <?php
 	echo "Your timeline <br> ---------------------------------------------<br> ";
-	$diary_query = $wildbook->prepare("SELECT `title`, `timestamp`, `content`, `lid`, `privacy` FROM diarypost WHERE `posteruid` = ?;");
+	$diary_query = $wildbook->prepare("SELECT `did`, `title`, `timestamp`, `content`, `lid`, `privacy` FROM diarypost WHERE `posteruid` = ?;");
+
 	$diary_query->bind_param("i", user_id());
 	$diary_query->execute();
-	$diary_query->bind_result($title, $timestamp, $content, $lid, $privacy);
+	$diary_query->store_result();
+	$diary_query->bind_result($did, $title, $timestamp, $content, $lid, $privacy);
 	while ($diary_query->fetch()) {
+		echo "<div style=\"max-width: 75%\">";
 		echo $title; echo "<br>";
 		echo $timestamp; echo "<br>";
 		echo $content; echo "<br>";
+
+		if (!isset($photo_query))
+			$photo_query = $wildbook->prepare("SELECT `pid` FROM `photo` WHERE `did` = ?");
+		$photo_query->bind_param("i", $did);
+		$photo_query->execute();
+		$photo_query->bind_result($pid);
+
+		while($photo_query->fetch()) {
+			echo "<img src=\"image.php?id=$pid\" style=\"max-width: 100%\"/>";
+		}
+		echo "</div>";
 		echo "-----------------------------------------------<br>";
 	}
 

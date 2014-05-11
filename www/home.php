@@ -28,7 +28,7 @@ username: <input name="search_username" type="text" maxlength="30"/>
 	
 	echo "Your Friends <br> ------------------------------------------------- <br>";
 	$wildbook = connect_wildbook();
-	$friend_query = $wildbook->prepare("SELECT `username` FROM `user` WHERE `uid` = (SELECT `seconduid` FROM `friend` WHERE `firstuid` = ?);");
+	$friend_query = $wildbook->prepare("SELECT `username` FROM `user` WHERE `uid` = (SELECT `seconduid` FROM `accepted_friends` WHERE `firstuid` = ?);");
 	$uid = user_id();
 	$friend_query->bind_param("i", $uid);
 	$friend_query->execute();

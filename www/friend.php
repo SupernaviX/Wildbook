@@ -8,21 +8,31 @@ var_dump($_POST);
 
 if( isset($_POST["requestee"]) ) {
 	$requester = $_SESSION["current_user_id"];
-	echo $_SESSION["current_user_id"];
-	echo session_id();
 	$requestee = $_POST["requestee"];
-	$privacy = $_POST["privacy"];
-	
+	if ($requester != $requestee) {
 
-	$wildbook = connect_wildbook();
-	$addquery = $wildbook->prepare("INSERT INTO `request`(`requester`, `requestee`) VALUES (?,?);");
-	if (!$addquery) {
-		echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
+		$wildbook = connect_wildbook();
+		$addrequest = $wildbook->prepare("INSERT INTO `request`(`requester`, `requestee`) VALUES (?,?);");
+		if (!$addrequest) {
+			echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
+		}
+		$addrequest->bind_param("ii",$requester,$requestee);
+		if (!$addrequest->execute())
+			echo "RExecute failed: (" . $wildbook->errno . ") " . $wildbook->error;
+
+		$addfriend = $wildbook->prepare("INSERT INTO `friend`(`firstuid`, `seconduid`, `since`, `privacy`) VALUES (?,?,?,?);");
+		if (!$addfriend) {
+			echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
+		}
+		$addfriend->bind_param("iisi",
+		$_SESSION["current_user_id"],
+		$_POST["requestee"],
+		$_POST["datetime"],
+		$_POST["privacy"]);
+		if (!$addfriend->execute())
+			echo "FExecute failed: (" . $wildbook->errno . ") " . $wildbook->error;	
 	}
-	$addquery->bind_param("ii",$requester,$requestee);
-	if (!$addquery->execute())
-		echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
-	else header("location:home.php");	
+	else {header("location:profile.php?search=$requestee");}
 }
 else if (isset($_POST["requester"]) ) {
 

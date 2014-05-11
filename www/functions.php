@@ -39,10 +39,11 @@ function user_name() {
 /*THESE FUNCTIONS KEEP RETURNING NULL, I HAVE NO IDEA WHY*/
 function get_uid($username) {
 	$wildbook = connect_wildbook();
-	$get_uid = $wildbook->prepare("SELECT uid FROM `user` WHERE `username` = ?");
+	$get_uid = $wildbook->prepare("SELECT `uid` FROM `user` WHERE `username` = ?");
 	$get_uid->bind_param("s", $username);
 	$get_uid->execute();
 	$get_uid->bind_result($uid);
+	$get_uid->fetch();
 	return ($uid);
 }
 
@@ -52,7 +53,24 @@ function get_username($uid) {
 	$get_username->bind_param("i", $uid);
 	$get_username->execute();
 	$get_username->bind_result($username);
+	$get_username->fetch();
 	return ($username);
+}
+/*checks if other user already sent friend request*/
+function check_req($firstuid,$seconduid) {	 
+	$wildbook = connect_wildbook();
+	$chk_req = $wildbook->prepare("SELECT 1 FROM `request` WHERE `requester` = ? and `requestee` = ?;");
+	if (!$chk_req) {
+		echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
+	}
+	$chk_req->bind_param("ii", $seconduid, $firstuid);	
+	if (!$chk_req->execute())
+		echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;	
+	$chk_req->bind_result($req);
+	$chk_req->fetch();
+	var_dump($chk_req);
+	var_dump($req);
+	return($chk_req->fetch());
 }
 
 ?>

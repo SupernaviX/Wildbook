@@ -22,8 +22,7 @@ if( isset($_POST["requestee"]) ) {
 	$addquery->bind_param("ii",$requester,$requestee);
 	if (!$addquery->execute())
 		echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
-	else header("location:home.php");
-	
+	else header("location:home.php");	
 }
 else if (isset($_POST["requester"]) ) {
 

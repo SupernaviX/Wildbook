@@ -25,6 +25,7 @@
 <option value ="2">Friends</option>
 <option value ="3">Friends of Friends</option>
 <option value ="4">Everyone</option>
+</select>
 </form>
 <a href=\"home.php\">Home</a>
 <?php

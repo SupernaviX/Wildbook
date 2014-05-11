@@ -11,12 +11,14 @@
 		$search_uid = get_uid($search);
 		if (user_exists($search)) {
 			echo "<h4>"; echo $search; echo"</h4>";
-			$accept = check_req($username,$search);
-			
+			$accept = check_req($_SESSION['current_user_id'],$search_uid);
+			$are_friends = check_friend($_SESSION['current_user_id'],$search_uid);
 			?>
 			<form action="friend.php" method="post">
-			<input type="submit" value="<?php if($accept) echo "Accept Friend"; else echo "Add Friend"; ?>"/>
+			<input type="submit" value="<?php if($accept) echo "Accept Friend"; else if($are_friends) echo "Remove Friend"; else echo "Add Friend"; ?>"/>
 			<input type="hidden" value="<?php echo $search_uid ?>" name="requestee">
+			<input type="hidden" value="<?php echo $accept ?>" name="accept">
+			<input type="hidden" value="<?php echo $are_friends ?>" name="remove">
 			<input type="hidden" value="<?php echo date("Y-m-d H:i:s") ?>" name="datetime">
 			<select name="privacy">
 			<option value ="1">Private</option>

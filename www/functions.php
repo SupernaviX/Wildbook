@@ -66,11 +66,20 @@ function check_req($firstuid,$seconduid) {
 	$chk_req->bind_param("ii", $seconduid, $firstuid);	
 	if (!$chk_req->execute())
 		echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;	
-	$chk_req->bind_result($req);
-	$chk_req->fetch();
-	var_dump($chk_req);
-	var_dump($req);
 	return($chk_req->fetch());
 }
+/*checks if the users are friends*/
+function check_friend($firstuid,$seconduid) {
+	$wildbook = connect_wildbook();
+	$chk_friend = $wildbook->prepare("SELECT 1 FROM `accepted_friends` WHERE `firstuid` = ? and `seconduid` = ?;");
+	if(!$chk_friend)
+		echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
+	$chk_friend->bind_param("ii", $seconduid, $firstuid);
+	if (!$chk_friend->execute())
+		echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
+	return($chk_friend->fetch());		
+}
+
+
 
 ?>

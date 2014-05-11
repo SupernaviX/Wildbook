@@ -34,7 +34,7 @@ username: <input name="search_username" type="text" maxlength="30"/>
 	$friend_query->execute();
 	$friend_query->bind_result($username);
 	while ($friend_query->fetch()) {
-		echo "$username <br>";
+		echo "<a href=\"profile.php?search=$username\">$username</a> <br>";
 	}
 
 	echo "Add a Diary Post <br>";

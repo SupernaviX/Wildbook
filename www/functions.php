@@ -31,4 +31,23 @@ function user_id() {
 function user_name() {
 	return $_SESSION['current_user_name'];
 }
+/*THESE FUNCTIONS KEEP RETURNING NULL, I HAVE NO IDEA WHY*/
+function get_uid($username) {
+	$wildbook = connect_wildbook();
+	$get_uid = $wildbook->prepare("SELECT uid FROM `user` WHERE `username` = ?");
+	$get_uid->bind_param("s", $username);
+	$get_uid->execute();
+	$get_uid->bind_result($uid);
+	return ($uid);
+}
+
+function get_username($uid) {
+	$wildbook = connect_wildbook();
+	$get_username = $wildbook->prepare("SELECT `username` FROM `user` WHERE `uid`= ?");
+	$get_username->bind_param("i", $uid);
+	$get_username->execute();
+	$get_username->bind_result($username);
+	return ($username);
+}
+
 ?>

@@ -4,22 +4,6 @@ begin_page("Wildbook");
 
 echo '<h4>Create Profile</h4>';
 
-/*$link = mysql_connect('localhost','root','password'); 
-if (!$link) { 
-	die('Could not connect to MySQL: ' . mysql_error()); 
-} 
-$wildbook = mysql_select_db('wildbook',$link) or die("Could not select wildbook" . mysql_error());
-
-
-$user_query = mysql_query("SELECT username from user") 
-	or die('Invalid query: ' . mysql_error());
-while($row = mysql_fetch_array($user_query)) {
-	$tempuser = $row['username'];
-	if($tempuser == $username) {
-		echo "This username is already taken <br />";
-		$info_accepted = 0;
-	}
-}*/
 $info_accepted = true;
 $username = $_POST['username'];
 if (user_exists($username)) {

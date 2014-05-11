@@ -8,13 +8,13 @@
 	$username = $_SESSION["current_user_name"];
 	echo "Welcome $username!<br><br><br>";
 ?>
-<form action="profile.php" method="post"> 
-username: <input name="search_username" type="text" maxlength="30"/> 
+<form action="profile.php" method="get">
+username: <input name="search" type="text" maxlength="30"/>
 <input type="submit" />
 </form>
 
 <?php
-	
+
 	echo "Friend Requests <br> ------------------------------------------------- <br>";
 	$wildbook = connect_wildbook();
 	$req_query = $wildbook->prepare("SELECT `requester` FROM `request` WHERE `requestee` = ?;");

@@ -23,14 +23,20 @@ username: <input name="search_username" type="text" maxlength="30"/>
 	echo "Add a Diary Post <br>";
 ?>
 
-<form action="adddiarypost.php" method="post"> 
-title: <input name="title" type="text" maxlength="30"/> 
-content : <input name="content" type="text" maxlength="30"/>
+<form enctype="multipart/form-data" action="adddiarypost.php" method="post"> 
+<label name="title">Title:</label>
+<input name="title" type="text" maxlength="30"/>
+<label name="content">Content:</label>
+<textarea name="content"></textarea>
+<label name="privacy">Share with:</label>
 <select name="privacy">
-<option value ="1">Private</option>
-<option value ="2">Friends</option>
-<option value ="3">Friends of Friends</option>
-<option value ="4">Everyone</option>
+	<option value ="1">Private</option>
+	<option value ="2">Friends</option>
+	<option value ="3">Friends of Friends</option>
+	<option value ="4">Everyone</option>
+</select>
+<label name="photos[]">Photos:</label>
+<input name="photos[]" type="file" accept="image/x-png, image/gif, image/jpeg" />
 <input type="submit" />
 </form>
 

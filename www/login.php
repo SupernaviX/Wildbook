@@ -24,8 +24,10 @@ if( isset($_POST['username']) && isset($_POST['password']) ) {
 	if (!($pass_query->execute()))
 		echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
 	$pass_query->bind_result($uid, $stored_passhash);
-	if ($pass_query->fetch() && password_verify($password, $stored_passhash))
+	if ($pass_query->fetch() && password_verify($password, $stored_passhash)) {
+		login($username, $uid);
 		header("location:home.php");
+	}
 	else
 		echo "Username/password invalid, try again";
 }

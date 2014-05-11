@@ -88,7 +88,7 @@
 	<?php list_errors($errors["privacy"]); ?>
 
 	<label name="photos[]">Photos:</label>
-	<input name="photos[]" type="file" accept="image/x-png, image/gif, image/jpeg" />
+	<input name="photos[]" type="file" accept="image/*" multiple="multiple"/>
 	<?php list_errors($errors["photos[]"]); ?>
 
 	<input type="submit" />

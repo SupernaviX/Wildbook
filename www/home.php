@@ -52,7 +52,7 @@ username: <input name="search_username" type="text" maxlength="30"/>
 	<option value ="4">Everyone</option>
 </select>
 <label name="photos[]">Photos:</label>
-<input name="photos[]" type="file" accept="image/x-png, image/gif, image/jpeg" />
+<input name="photos[]" type="file" accept="image/*" multiple="multiple"/>
 <input type="submit" />
 </form>
 

@@ -7,6 +7,11 @@
 		$photo_query = $wildbook->prepare('SELECT `pid` FROM `photo` WHERE `did` = ?');
 		$video_query = $wildbook->prepare('SELECT `vid` FROM `video` WHERE `did` = ?');
 		$audio_query = $wildbook->prepare('SELECT `aid` FROM `audio` WHERE `did` = ?');
+		$comments_query = $wildbook->prepare('SELECT `username`, `message`, `timestamp` '
+											.'FROM `comment` `c` '
+											.'JOIN `user` `u` ON `c`.`uid` = `u`.`uid` '
+											.'WHERE `did` = ? '
+											.'ORDER BY `timestamp`');
 
 		echo "<div style=\"max-width: 75%\">";
 		if ($postername === $posteename)
@@ -38,6 +43,23 @@
 			echo "<audio controls><source src=\"audio.php?id=$aid\" type=\"$content_type\"></audio><br/>";
 		}
 
+		echo '<div style="margin-left: 20px">';
+		$comments_query->bind_param("i", $did);
+		$comments_query->execute();
+		$comments_query->bind_result($commenter, $message, $timestamp);
+		while($comments_query->fetch()) {
+			echo "<div><em>$commenter replied at $timestamp</em>"
+				."<pre>$message</pre></div>";
+		}
+
+		echo '<div><form action="addcomment.php" method="post">'
+			.'<input type="hidden" name="did" value="' . $did . '" />'
+			.'<input type="hidden" name="posteename" value="' . $posteename . '" />'
+			.'<textarea name="message"></textarea>'
+			.'<input type="submit" value="Comment" />'
+			.'</form></div>';
+
+		echo "</div>";
 		echo "</div>";
 	}
 

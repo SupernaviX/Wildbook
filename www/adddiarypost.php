@@ -9,6 +9,10 @@
 			$title = $_POST["title"];
 		else
 			$errors["title"][] = "Post must have a title";
+		if (!empty($_POST["posteeuid"]))
+			$posteeuid = $_POST["posteeuid"];
+		else
+			$posteeuid = user_id();
 		$content = $_POST["content"];
 		$privacy = intval($_POST["privacy"]);
 		if ($privacy < 1 || $privacy > 4) {
@@ -47,7 +51,7 @@
 				'INSERT INTO `diarypost` (`posteruid`, `posteeuid`, `title`, `timestamp`, `content`, `privacy`)
 					VALUES (?, ?, ?, NOW(), ?, ?);');
 			$uid = user_id();
-			$make_post->bind_param("iissi", $uid, $uid, $title, $content, $privacy);
+			$make_post->bind_param("iissi", $uid, $posteeuid, $title, $content, $privacy);
 			$make_post->execute();
 			$did = $make_post->insert_id;
 
@@ -87,5 +91,8 @@
 			header("location:home.php");
 		}
 	}
-	display_diary_post_submission_form($title, $content, $privacy, $errors);
+	if (empty($posteeuid)) {
+		$posteeuid = user_id();
+	}
+	display_diary_post_submission_form($posteeuid, $title, $content, $privacy, $errors);
 ?>

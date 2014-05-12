@@ -38,12 +38,11 @@ username: <input name="search" type="text" maxlength="30"/>
 	}
 
 	echo "Add a Diary Post <br>";
-	display_diary_post_submission_form();
+	display_diary_post_submission_form($uid);
 
 	echo "Your timeline <br> ---------------------------------------------<br> ";
 	$diary_query = $wildbook->prepare('CALL timeline(?)');
 
-	$uid = user_id();
 	$diary_query->bind_param("i", $uid);
 	$diary_query->execute();
 	$diary_query->store_result();

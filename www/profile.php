@@ -37,6 +37,8 @@
 		</form>
 
 		<?php
+		echo "<h4>Post in ${search}'s Diary</h4>";
+		display_diary_post_submission_form($search_uid);
 	}
 	/*display all of a users friends*/
 	echo "Friends <br> ------------------------------------------------- <br>";

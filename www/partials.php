@@ -42,8 +42,10 @@
 	}
 
 
-	function display_diary_post_submission_form($title = "", $content = "", $privacy = 2, $errors = array()) {
+	function display_diary_post_submission_form($posteeid, $title = "", $content = "", $privacy = 2, $errors = array()) {
 		echo '<form enctype="multipart/form-data" action="adddiarypost.php" method="post">';
+
+		echo '<input type="hidden" name="posteeuid" value="' . $posteeid . '" />';
 
 		echo '<label name="title">Title:</label>'
 			.'<input name="title" type="text" maxlength="30" value="'. $title .'" />'

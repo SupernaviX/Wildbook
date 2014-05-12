@@ -41,19 +41,21 @@ username: <input name="search" type="text" maxlength="30"/>
 	display_diary_post_submission_form();
 
 	echo "Your timeline <br> ---------------------------------------------<br> ";
-	$diary_query = $wildbook->prepare("SELECT `did`, `title`, `timestamp`, `content`, `lid`, `privacy` FROM diarypost WHERE `posteruid` = ?;");
+	$diary_query = $wildbook->prepare('CALL timeline(?)');
 
 	$uid = user_id();
 	$diary_query->bind_param("i", $uid);
 	$diary_query->execute();
 	$diary_query->store_result();
-	$diary_query->bind_result($did, $title, $timestamp, $content, $lid, $privacy);
+	$diary_query->bind_result($did, $postername, $posteename, $title, $timestamp, $content);
 	while ($diary_query->fetch()) {
+		//display_diary_post($did, $)
 		echo "<div style=\"max-width: 75%\">";
 		echo $title; echo "<br>";
 		echo $timestamp; echo "<br>";
 		echo $content; echo "<br>";
 
+		/*
 		if (!isset($photo_query))
 			$photo_query = $wildbook->prepare("SELECT `pid` FROM `photo` WHERE `did` = ?");
 		$photo_query->bind_param("i", $did);
@@ -83,7 +85,7 @@ username: <input name="search" type="text" maxlength="30"/>
 
 		while($audio_query->fetch()) {
 			echo "<audio controls><source src=\"audio.php?id=$aid\" type=\"$content_type\"></audio><br/>";
-		}
+		}*/
 
 		echo "</div>";
 		echo "-----------------------------------------------<br>";

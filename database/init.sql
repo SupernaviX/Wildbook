@@ -110,3 +110,28 @@ create view wildbook.fof as
 	select a1.firstuid as firstuid, a2.seconduid as seconduid
 	from accepted_friends a1, accepted_friends a2
 	where a1.seconduid = a2.firstuid and a1.firstuid != a2.seconduid;
+
+-- Returns the following:
+-- All posts made by the user
+-- All posts made on the user's wall
+-- All posts made on a friend's wall that are shared with friends (or above)
+CREATE PROCEDURE wildbook.timeline(user_id INT(3)) READS SQL DATA
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+		FROM diarypost dp
+		JOIN user u1 ON dp.posteruid = u1.uid
+		JOIN user u2 ON dp.posteeuid = u2.uid
+		WHERE dp.posteruid = user_id)
+	UNION DISTINCT
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+		FROM diarypost dp
+		JOIN user u1 ON dp.posteruid = u1.uid
+		JOIN user u2 ON dp.posteeuid = u2.uid
+		WHERE dp.posteeuid = user_id)
+	UNION DISTINCT
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+		FROM diarypost dp
+		JOIN accepted_friends af ON dp.posteeuid = af.seconduid
+		JOIN user u1 ON dp.posteruid = u1.uid
+		JOIN user u2 ON dp.posteeuid = u2.uid
+		WHERE af.firstuid = user_id AND dp.privacy >= 2)
+	ORDER BY `timestamp` DESC;

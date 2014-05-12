@@ -30,6 +30,7 @@ if( isset($_POST['username']) && isset($_POST['password']) ) {
 	}
 	else
 		echo "Username/password invalid, try again";
+	$wildbook->close();
 }
 
 ?>

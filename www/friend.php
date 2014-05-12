@@ -19,6 +19,7 @@ if( isset($_POST["requestee"]) ) {
 		if (!$delete->execute())
 			echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
 		header("location:profile.php?search=$req_username");
+		$wildbook->close();
 	}
 	else if ($requester != $requestee) {
 		$wildbook = connect_wildbook();
@@ -52,6 +53,7 @@ if( isset($_POST["requestee"]) ) {
 		if (!$addfriend->execute())
 			echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;	
 		header("location:profile.php?search=$req_username");
+		$wildbook->close();
 	}
 	else {header("location:profile.php?search=$req_username");}
 }

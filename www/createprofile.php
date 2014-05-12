@@ -41,6 +41,7 @@ else {
 		echo "Execute failed: (" . $link->errno . ") " . $link->error;
 	login($username, $insert->insert_id);
 	echo "<a href=\"home.php\">Profile Created!</a>";
+	$link->close();
 }
 
 end_page();

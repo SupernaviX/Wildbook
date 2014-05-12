@@ -61,6 +61,7 @@
 
 		echo "</div>";
 		echo "</div>";
+		$wildbook->close();
 	}
 
 

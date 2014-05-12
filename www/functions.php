@@ -16,7 +16,9 @@ function user_exists($username) {
 	$duplicate_check = $wildbook->prepare("SELECT 1 FROM `user` WHERE `username` = ?");
 	$duplicate_check->bind_param("s", $username);
 	$duplicate_check->execute();
-	return ($duplicate_check->fetch());
+	$exists = $duplicate_check->fetch();
+	$wildbook->close();
+	return $exists;
 }
 
 function login($username, $uid) {
@@ -44,7 +46,8 @@ function get_uid($username) {
 	$get_uid->execute();
 	$get_uid->bind_result($uid);
 	$get_uid->fetch();
-	return ($uid);
+	$wildbook->close();
+	return $uid;
 }
 
 function get_username($uid) {
@@ -54,7 +57,8 @@ function get_username($uid) {
 	$get_username->execute();
 	$get_username->bind_result($username);
 	$get_username->fetch();
-	return ($username);
+	$wildbook->close();
+	return $username;
 }
 /*checks if other user already sent friend request*/
 function check_req($firstuid,$seconduid) {	 
@@ -66,7 +70,9 @@ function check_req($firstuid,$seconduid) {
 	$chk_req->bind_param("ii", $seconduid, $firstuid);	
 	if (!$chk_req->execute())
 		echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;	
-	return($chk_req->fetch());
+	$req = $chk_req->fetch();
+	$wildbook->close();
+	return $req;
 }
 /*checks if the users are friends*/
 function check_friend($firstuid,$seconduid) {
@@ -77,7 +83,9 @@ function check_friend($firstuid,$seconduid) {
 	$chk_friend->bind_param("ii", $seconduid, $firstuid);
 	if (!$chk_friend->execute())
 		echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
-	return($chk_friend->fetch());		
+	$friend = $chk_friend->fetch();
+	$wildbook->close();
+	return $friend;		
 }
 
 /*returns if a post is visible to viewer (firstuid is viewer, seconduid is owner of post/friendship, privacy is set by seconduid */
@@ -96,7 +104,9 @@ function visible($firstuid,$seconduid,$privacy) {
 		if(!$fof_query) echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
 		$fof_query->bind_param("ii",$firstuid,$seconduid);
 		if (!$fof_query->execute()) echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
-		if($fof_query->fetch() or check_friend($firstuid,$seconduid) or $firstuid == $seconduid) return true;
+		$fof = $fof_query->fetch();
+		$wildbook->close();
+		if($fof or check_friend($firstuid,$seconduid) or $firstuid == $seconduid) return true;
 		else return false;
 	}
 	else {return true;}	//visible to everyone
@@ -107,10 +117,12 @@ function distance($firstuid, $seconduid) {
 	$fof_query = $wildbook->prepare("SELECT 1 FROM `fof` WHERE `firstuid` = ? and `seconduid`= ?;");
 	$fof_query->bind_param("ii",$firstuid,$seconduid);
 	$fof_query->execute();
+	$fof = $fof_query->fetch();
+	$wildbook->close();
 	
 	if ($firstuid == $seconduid) return 1;
 	else if (check_friend($firstuid,$seconduid)) return 2;
-	else if ($fof_query->fetch()) return 3;
+	else if ($fof) return 3;
 	else return 4;
 }
 ?>

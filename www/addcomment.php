@@ -10,6 +10,7 @@
 	$add_comment = $wildbook->prepare('INSERT INTO `comment` (`did`, `uid`, `message`, `timestamp`) VALUES (?, ?, ?, NOW())');
 	$add_comment->bind_param("iis", $did, $uid, $message);
 	$add_comment->execute();
+	$wildbook->close();
 
 	header('location:profile.php?search=' . $posteename);
 ?>

@@ -71,6 +71,7 @@
 		display_diary_post($did, $postername, $search, $title, $timestamp, $content);
 		echo "------------------------------------------------- <br>";
 	}
+	$wildbook->close();
 ?>
 
 <a href="home.php">Home</a>

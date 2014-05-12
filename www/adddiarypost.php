@@ -87,7 +87,7 @@
 					$upload_audio->execute();
 				}
 			}
-
+			$wildbook->close();
 			header("location:home.php");
 		}
 	}

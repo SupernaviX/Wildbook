@@ -27,7 +27,6 @@ username: <input name="search" type="text" maxlength="30"/>
 	}
 	
 	echo "Your Friends <br> ------------------------------------------------- <br>";
-	$wildbook = connect_wildbook();
 	$friend_query = $wildbook->prepare("SELECT `username` FROM `user` WHERE `uid` = (SELECT `seconduid` FROM `accepted_friends` WHERE `firstuid` = ?);");
 	$uid = user_id();
 	$friend_query->bind_param("i", $uid);
@@ -51,6 +50,6 @@ username: <input name="search" type="text" maxlength="30"/>
 		display_diary_post($did, $postername, $posteename, $title, $timestamp, $content);
 		echo "---------------------------------------------<br>";
 	}
-
+	$wildbook->close();
 	end_page();
 ?>

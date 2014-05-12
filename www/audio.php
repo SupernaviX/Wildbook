@@ -12,5 +12,6 @@
 			header('Content-type: ' . $content_type);
 			echo $content;
 		}
+		$wildbook->close();
 	}
 ?>

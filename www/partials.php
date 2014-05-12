@@ -9,9 +9,13 @@
 		$audio_query = $wildbook->prepare('SELECT `aid` FROM `audio` WHERE `did` = ?');
 
 		echo "<div style=\"max-width: 75%\">";
-		echo $title; echo "<br>";
-		echo $timestamp; echo "<br>";
-		echo "$content - $postername <br>";
+		if ($postername === $posteename)
+			echo "$postername <br/>";
+		else
+			echo "$postername -> $posteename <br/>";
+		echo $title; echo "<br/>";
+		echo $timestamp; echo "<br/>";
+		echo $content; echo "<br/>";
 
 		$photo_query->bind_param("i", $did);
 		$photo_query->execute();

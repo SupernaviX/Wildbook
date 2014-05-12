@@ -49,46 +49,8 @@ username: <input name="search" type="text" maxlength="30"/>
 	$diary_query->store_result();
 	$diary_query->bind_result($did, $postername, $posteename, $title, $timestamp, $content);
 	while ($diary_query->fetch()) {
-		//display_diary_post($did, $)
-		echo "<div style=\"max-width: 75%\">";
-		echo $title; echo "<br>";
-		echo $timestamp; echo "<br>";
-		echo $content; echo "<br>";
-
-		/*
-		if (!isset($photo_query))
-			$photo_query = $wildbook->prepare("SELECT `pid` FROM `photo` WHERE `did` = ?");
-		$photo_query->bind_param("i", $did);
-		$photo_query->execute();
-		$photo_query->bind_result($pid);
-
-		while($photo_query->fetch()) {
-			echo "<img src=\"image.php?id=$pid\" style=\"max-width: 100%\"/><br/>";
-		}
-
-		if (!isset($video_query))
-			$video_query = $wildbook->prepare("SELECT `vid`, `content_type` FROM `video` WHERE `did` = ?");
-		$video_query->bind_param("i", $did);
-		$video_query->execute();
-		$video_query->bind_result($vid, $content_type);
-
-		while($video_query->fetch()) {
-			echo "<video controls><source src=\"video.php?id=$vid\" type=\"$content_type\"></video><br/>";
-		}
-
-
-		if (!isset($audio_query))
-			$audio_query = $wildbook->prepare("SELECT `aid`, `content_type` FROM `audio` WHERE `did` = ?");
-		$audio_query->bind_param("i", $did);
-		$audio_query->execute();
-		$audio_query->bind_result($aid, $content_type);
-
-		while($audio_query->fetch()) {
-			echo "<audio controls><source src=\"audio.php?id=$aid\" type=\"$content_type\"></audio><br/>";
-		}*/
-
-		echo "</div>";
-		echo "-----------------------------------------------<br>";
+		display_diary_post($did, $postername, $posteename, $title, $timestamp, $content);
+		echo "---------------------------------------------<br>";
 	}
 
 	end_page();

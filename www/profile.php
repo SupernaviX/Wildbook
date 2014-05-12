@@ -61,9 +61,9 @@
 		.'ORDER BY `timestamp` DESC;');
 	$post_query->bind_param("ii", $search_uid, $distance);
 	$post_query->execute();
-	$post_query->bind_result($did, $username, $title, $timestamp, $content);
+	$post_query->bind_result($did, $postername, $title, $timestamp, $content);
 	while ($post_query->fetch()) {
-		display_diary_post($did, $username, $title, $timestamp, $content);
+		display_diary_post($did, $postername, $search, $title, $timestamp, $content);
 		echo "------------------------------------------------- <br>";
 	}
 ?>

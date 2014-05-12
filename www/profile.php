@@ -18,24 +18,26 @@
 		end_page();
 		exit;
 	}
-?>
 
-<form action="friend.php" method="post">
-	<input type="submit" value="<?php if($accept) echo "Accept Friend"; else if($are_friends) echo "Remove Friend"; else echo "Add Friend"; ?>"/>
-	<input type="hidden" value="<?php echo $search_uid ?>" name="requestee">
-	<input type="hidden" value="<?php echo $accept ?>" name="accept">
-	<input type="hidden" value="<?php echo $are_friends ?>" name="remove">
-	<input type="hidden" value="<?php echo date("Y-m-d H:i:s") ?>" name="datetime">
-	<select name="privacy">
-	<option value ="1">Private</option>
-	<option value ="2">Friends</option>
-	<option value ="3">Friends of Friends</option>
-	<option value ="4">Everyone</option>
-	</select>
-</form>
+	if ($search_uid !== user_id()) {
+		?>
 
-<?php
+		<form action="friend.php" method="post">
+			<input type="submit" value="<?php if($accept) echo "Accept Friend"; else if($are_friends) echo "Remove Friend"; else echo "Add Friend"; ?>"/>
+			<input type="hidden" value="<?php echo $search_uid ?>" name="requestee">
+			<input type="hidden" value="<?php echo $accept ?>" name="accept">
+			<input type="hidden" value="<?php echo $are_friends ?>" name="remove">
+			<input type="hidden" value="<?php echo date("Y-m-d H:i:s") ?>" name="datetime">
+			<select name="privacy">
+			<option value ="1">Private</option>
+			<option value ="2">Friends</option>
+			<option value ="3">Friends of Friends</option>
+			<option value ="4">Everyone</option>
+			</select>
+		</form>
 
+		<?php
+	}
 	/*display all of a users friends*/
 	echo "Friends <br> ------------------------------------------------- <br>";
 	$wildbook = connect_wildbook();

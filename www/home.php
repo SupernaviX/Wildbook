@@ -32,7 +32,7 @@ Activity: <input name="aname" type="text" maxlength="30"/>
 	}
 	
 	echo "Your Friends <br> ------------------------------------------------- <br>";
-	$friend_query = $wildbook->prepare("SELECT `username` FROM `user` WHERE `uid` = (SELECT `seconduid` FROM `accepted_friends` WHERE `firstuid` = ?);");
+	$friend_query = $wildbook->prepare("SELECT `username` FROM `user` WHERE `uid` = (SELECT `seconduid` FROM `accepted_friends` WHERE `firstuid` = ?)");
 	$uid = user_id();
 	$friend_query->bind_param("i", $uid);
 	$friend_query->execute();
@@ -55,6 +55,18 @@ Activity: <input name="aname" type="text" maxlength="30"/>
 		display_diary_post($did, $postername, $posteename, $title, $timestamp, $content);
 		echo "---------------------------------------------<br>";
 	}
+	
+	echo "Your liked activities <br> ------------------------------------------<br>";
+	$activity_query = $wildbook->prepare('SELECT `aname` FROM `useractivity` WHERE `uid` = ?');
+	if (!$activity_query) echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
+	$activity_query->bind_param("i", $_SESSION["current_user_id"] );
+	$activity_query->execute();
+	$activity_query->bind_result($aname);
+	while ($activity_query->fetch()) {
+		echo "<a href=\"activity.php?aname=$aname\">$aname</a> <br>";
+	}
+
+	
 	$wildbook->close();
 	end_page();
 ?>

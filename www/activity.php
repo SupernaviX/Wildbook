@@ -6,14 +6,19 @@
 	
 	$wildbook = connect_wildbook();
 	$aname_query = $wildbook->prepare('Select * from activity where aname = ?');
-	if(!$aname_query) echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
 	$aname_query->bind_param("s",$aname);
 	if (!$aname_query->execute()) echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
-	if(!$aname_query->fetch()) {
-		
+	if($aname_query->fetch()) {
+		echo "$aname <br>";
+		?>
+		<form action="like.php" method="post">
+		<input type="hidden" value="<?php echo $aname ?>" name="aname">
+		<input type="submit" value="Like" />
+		</form>
+		<?php
 	}
 	else {
-	
+		echo "would you like to add $aname to the list of activities? <br>";
 	}
 	
 	

@@ -59,7 +59,7 @@
 		.'JOIN `user` `u` ON `dp`.`posteruid` = `u`.`uid` '
 		.'WHERE `posteeuid` = ? AND `privacy` >= ? '
 		.'ORDER BY `timestamp` DESC;');
-	$post_query->bind_param("ii", $search_uid, $privacy);
+	$post_query->bind_param("ii", $search_uid, $distance);
 	$post_query->execute();
 	$post_query->bind_result($did, $username, $title, $timestamp, $content);
 	while ($post_query->fetch()) {

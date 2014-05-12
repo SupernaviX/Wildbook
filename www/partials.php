@@ -5,8 +5,8 @@
 	function display_diary_post($did, $postername, $posteename, $title, $timestamp, $content) {
 		$wildbook = connect_wildbook();
 		$photo_query = $wildbook->prepare('SELECT `pid` FROM `photo` WHERE `did` = ?');
-		$video_query = $wildbook->prepare('SELECT `vid` FROM `video` WHERE `did` = ?');
-		$audio_query = $wildbook->prepare('SELECT `aid` FROM `audio` WHERE `did` = ?');
+		$video_query = $wildbook->prepare('SELECT `vid`, `content_type` FROM `video` WHERE `did` = ?');
+		$audio_query = $wildbook->prepare('SELECT `aid`, `content_type` FROM `audio` WHERE `did` = ?');
 		$comments_query = $wildbook->prepare('SELECT `username`, `message`, `timestamp` '
 											.'FROM `comment` `c` '
 											.'JOIN `user` `u` ON `c`.`uid` = `u`.`uid` '

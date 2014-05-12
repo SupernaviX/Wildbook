@@ -71,12 +71,12 @@
 
 		echo '<label name="title">Title:</label>'
 			.'<input name="title" type="text" maxlength="30" value="'. $title .'" />'
-			.list_errors($errors["title"])
+			.list_errors($errors, "title")
 			.'<br />';
 
 		echo '<label name="content">Content:</label>'
 			.'<textarea name="content">' . $content .'</textarea>'
-			.list_errors($errors["content"])
+			.list_errors($errors, "content")
 			.'<br />';
 
 		echo '<label name="privacy">Share with:</label>'
@@ -86,30 +86,30 @@
 			.select_option(3, "Friends of Friends", $privacy)
 			.select_option(4, "Everyone", $privacy)
 			.'</select>'
-			.list_errors($errors["privacy"])
+			.list_errors($errors, "privacy")
 			.'<br />';
 
 		echo '<label name="photos[]">Photos:</label>'
 			.'<input name="photos[]" type="file" accept="image/*" multiple="multiple"/>'
-			.list_errors($errors["photos[]"])
+			.list_errors($errors, "photos[]")
 			.'<br />';
 
 		echo '<label name="videos[]">Videos:</label>'
 			.'<input name="videos[]" type="file" accept="video/*" multiple="multiple"/>'
-			.list_errors($errors["videos[]"])
+			.list_errors($errors, "videos[]")
 			.'<br />';
 
 		echo '<label name="audio[]">Audio:</label>'
 			.'<input name="audio[]" type="file" accept="audio/*" multiple="multiple"/>'
-			.list_errors($errors["audio[]"])
+			.list_errors($errors, "audio[]")
 			.'<br />';
 
 		echo '<input type="submit" />';
 		echo '</form>';
 	}
 
-	function list_errors($error_list) {
-		if (empty($error_list))
+	function list_errors($error_list, $input_name) {
+		if (empty($input_name) || !array_key_exists($input_name, $error_list))
 			return '';
 		$result = "<ul>";
 		foreach ($error_list as $error) {

@@ -15,7 +15,7 @@
 		$are_friends = check_friend($_SESSION['current_user_id'],$search_uid);
 	} else {
 		echo "User does not exist";
-		echo "<a href=\"home.php\">Home</a>"
+		echo "<a href=\"home.php\">Home</a>";
 		end_page();
 		exit;
 	}

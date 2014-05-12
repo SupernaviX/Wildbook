@@ -7,7 +7,8 @@ create table wildbook.user (
 	username varchar(30) not null,
 	passhash varchar(255) not null,
 	age int(3) not null,
-	city varchar (30) not null);
+	city varchar (30) not null,
+	unique (username));
 
 create table wildbook.activity (
 	aname varchar(30) primary key not null);

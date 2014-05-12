@@ -2,10 +2,12 @@
 	include_once "template.php";
 	begin_page("Home");
 	
-	$aname = $_GET['aname'];
+	
 	
 	$wildbook = connect_wildbook();
-	$aname_query = $wildbook->prepare('Select * from activity where aname = ?');
+	$aname_query = $wildbook->prepare('Select * from activity where aname =?');
+	if (!$aname_query) echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
+	$aname = $_GET['aname'];
 	$aname_query->bind_param("s",$aname);
 	if (!$aname_query->execute()) echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
 	if($aname_query->fetch()) {
@@ -18,7 +20,16 @@
 		<?php
 	}
 	else {
-		echo "would you like to add $aname to the list of activities? <br>";
+		$aname_like = $wildbook->prepare('Select * from activity where aname like ?');
+		$like = "%".$aname."%";
+		$aname_like->bind_param("s",$like);
+		$aname_like->execute();
+		$aname_like->bind_result($like_aname);
+		while($aname_like->fetch()) {
+			echo "Did you mean <a href=\"activity.php?aname=$like_aname\">$like_aname</a> <br>";
+		}	
+		
+		echo "Or would you like to add $aname to the list of activities? <br>";
 	}
 	
 	

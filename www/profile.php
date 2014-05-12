@@ -14,7 +14,7 @@
 		$accept = check_req($_SESSION['current_user_id'],$search_uid);
 		$are_friends = check_friend($_SESSION['current_user_id'],$search_uid);
 	} else {
-		echo "User does not exist";
+		echo "User does not exist<br>";
 		echo "<a href=\"home.php\">Home</a>";
 		end_page();
 		exit;

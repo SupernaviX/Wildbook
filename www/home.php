@@ -13,6 +13,11 @@ username: <input name="search" type="text" maxlength="30"/>
 <input type="submit" />
 </form>
 
+<form action="activity.php" method="get">
+Activity: <input name="aname" type="text" maxlength="30"/>
+<input type="submit" />
+</form>
+
 <?php
 
 	echo "Friend Requests <br> ------------------------------------------------- <br>";

@@ -1,7 +1,7 @@
 <?php
 
 function connect_wildbook() {
-	$connections = parse_ini_file(realpath("../database/connections.ini"), true);
+	$connections = parse_ini_file(realpath($_SERVER["DOCUMENT_ROOT"] . "/../database/connections.ini"), true);
 	$connection_name = $connections["connections"]["use"];
 	$connection = $connections[$connection_name];
 	$wildbook = new mysqli($connection["host"], $connection["username"], $connection["passwd"], $connection["dbname"]);

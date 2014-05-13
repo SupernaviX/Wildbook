@@ -115,7 +115,7 @@ create view wildbook.fof as
 -- Returns the following:
 -- All posts made by the user
 -- All posts made on the user's wall
--- All posts made on a friend's wall that are shared with friends (or above)
+-- All posts made by a friend that are shared with friends (or above)
 CREATE PROCEDURE wildbook.timeline(user_id INT(3)) READS SQL DATA
 	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
 		FROM diarypost dp
@@ -131,8 +131,115 @@ CREATE PROCEDURE wildbook.timeline(user_id INT(3)) READS SQL DATA
 	UNION DISTINCT
 	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
 		FROM diarypost dp
-		JOIN accepted_friends af ON dp.posteeuid = af.seconduid
+		JOIN accepted_friends af ON dp.posteruid = af.seconduid
 		JOIN user u1 ON dp.posteruid = u1.uid
 		JOIN user u2 ON dp.posteeuid = u2.uid
 		WHERE af.firstuid = user_id AND dp.privacy >= 2)
 	ORDER BY `timestamp` DESC;
+
+-- Returns the following:
+-- All posts made by the user at location
+-- All posts made on the user's wall at location
+-- All posts made by a friend that are shared with friends(or above) and are at location
+-- All posts made by an FOF that are shared with FOFs(or above) and are at location
+-- All posts shared with everyone about location
+CREATE PROCEDURE wildbook.postsin(location VARCHAR(30), user_id INT(3)) READS SQL DATA
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+		FROM diarypost dp
+		JOIN user u1 ON dp.posteruid = u1.uid
+		JOIN user u2 ON dp.posteeuid = u2.uid
+		JOIN location l ON dp.lid = l.lid
+		WHERE dp.posteruid = user_id AND l.lname = location)
+	UNION DISTINCT
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+		FROM diarypost dp
+		JOIN user u1 ON dp.posteruid = u1.uid
+		JOIN user u2 ON dp.posteeuid = u2.uid
+		JOIN location l ON dp.lid = l.lid
+		WHERE dp.posteeuid = user_id AND l.lname = location)
+	UNION DISTINCT
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+		FROM diarypost dp
+		JOIN accepted_friends af ON dp.posteruid = af.seconduid
+		JOIN user u1 ON dp.posteruid = u1.uid
+		JOIN user u2 ON dp.posteeuid = u2.uid
+		JOIN location l ON dp.lid = l.lid
+		WHERE af.firstuid = user_id AND dp.privacy >= 2 AND l.lname = location)
+	UNION DISTINCT
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+		FROM diarypost dp
+		JOIN fof ON dp.posteruid = fof.seconduid
+		JOIN user u1 ON dp.posteruid = u1.uid
+		JOIN user u2 ON dp.posteeuid = u2.uid
+		JOIN location l ON dp.lid = l.lid
+		WHERE fof.firstuid = user_id AND dp.privacy >= 3 AND l.lname = location)
+	UNION DISTINCT
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+		FROM diarypost dp
+		JOIN user u1 ON dp.posteruid = u1.uid
+		JOIN user u2 ON dp.posteeuid = u2.uid
+		JOIN location l ON dp.lid = l.lid
+		WHERE dp.privacy >= 4 AND l.lname = location)
+	ORDER BY `timestamp` DESC;
+
+-- Returns the following:
+-- All posts made by the user about term
+-- All posts made on the user's wall about term
+-- All posts made by a friend that are shared with friends(or above) and are about term
+-- All posts made by an FOF that are shared with FOFs(or above) and are about term
+-- All posts shared with everyone about term
+CREATE PROCEDURE wildbook.postsabout(term VARCHAR(65535), user_id INT(3)) READS SQL DATA
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+		FROM diarypost dp
+		JOIN user u1 ON dp.posteruid = u1.uid
+		JOIN user u2 ON dp.posteeuid = u2.uid
+		WHERE dp.posteruid = user_id AND dp.content LIKE CONCAT('%', term, '%'))
+	UNION DISTINCT
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+		FROM diarypost dp
+		JOIN user u1 ON dp.posteruid = u1.uid
+		JOIN user u2 ON dp.posteeuid = u2.uid
+		JOIN location l ON dp.lid = l.lid
+		WHERE dp.posteeuid = user_id AND dp.content LIKE CONCAT('%', term, '%'))
+	UNION DISTINCT
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+		FROM diarypost dp
+		JOIN accepted_friends af ON dp.posteruid = af.seconduid
+		JOIN user u1 ON dp.posteruid = u1.uid
+		JOIN user u2 ON dp.posteeuid = u2.uid
+		JOIN location l ON dp.lid = l.lid
+		WHERE af.firstuid = user_id AND dp.privacy >= 2 AND dp.content LIKE CONCAT('%', term, '%'))
+	UNION DISTINCT
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+		FROM diarypost dp
+		JOIN fof ON dp.posteruid = fof.seconduid
+		JOIN user u1 ON dp.posteruid = u1.uid
+		JOIN user u2 ON dp.posteeuid = u2.uid
+		JOIN location l ON dp.lid = l.lid
+		WHERE fof.firstuid = user_id AND dp.privacy >= 3 AND dp.content LIKE CONCAT('%', term, '%'))
+	UNION DISTINCT
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+		FROM diarypost dp
+		JOIN user u1 ON dp.posteruid = u1.uid
+		JOIN user u2 ON dp.posteeuid = u2.uid
+		JOIN location l ON dp.lid = l.lid
+		WHERE dp.privacy >= 4 AND dp.content LIKE CONCAT('%', term, '%'))
+	ORDER BY `timestamp` DESC;
+
+-- Does a search over users, activities, and locations.
+-- Returns a table with two columns:
+	-- name is the full name of what's being searched for
+	-- type is the type of the thing (user, activity, or location)
+CREATE PROCEDURE wildbook.search(term VARCHAR(65535)) READS SQL DATA
+	(SELECT `username` AS `name`, 'user' AS `type`
+		FROM `user`
+		WHERE `username` LIKE CONCAT('%', term, '%'))
+	UNION
+	(SELECT `aname` AS `name`, 'activity' AS `type`
+		FROM `activity`
+		WHERE `aname` LIKE CONCAT('%', term, '%'))
+	UNION
+	(SELECT `lname` AS `name`, 'location' AS `type`
+		FROM `location`
+		WHERE `lname` LIKE CONCAT('%', term, '%'))
+	ORDER BY CHAR_LENGTH(`name`);

@@ -1,6 +1,6 @@
 <?php
 	include_once "template.php";
-	begin_page("Home");
+	begin_page($_GET['aname']);
 	
 	
 	

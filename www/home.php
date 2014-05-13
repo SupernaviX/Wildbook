@@ -8,15 +8,38 @@
 	$username = $_SESSION["current_user_name"];
 	echo "Welcome $username!<br><br><br>";
 ?>
-<form action="profile.php" method="get">
-username: <input name="search" type="text" maxlength="30"/>
-<input type="submit" />
+
+<form id="searchform" action="search.php" method="POST">
+	<label name="term">Search:</label>
+	<input id="search" name="term" type="text" />
+	<input id="type" name="type" type="hidden" />
+	<input type="submit" value ="Search"/>
 </form>
 
-<form action="activity.php" method="get">
-Activity: <input name="aname" type="text" maxlength="30"/>
-<input type="submit" />
-</form>
+<script type="text/javascript">
+	$.widget("custom.uberAutocomplete", $.ui.autocomplete, {
+		_renderItem: function( ul, item ) {
+			var renderString = (item.value != "")
+				? item.label + "(" + item.value + ")"
+				: item.label;
+			return $( "<li>" )
+				.append( $( "<a>" ).text( renderString ) )
+				.appendTo( ul );
+		}
+	})
+	$("#search").uberAutocomplete({
+		source: "search/all.php",
+		response: function(event, ui) {
+			ui.content.unshift({label: $("#search").val(), value: ""});
+		},
+		select: function(event, ui) {
+			event.preventDefault();
+			$("#search").val(ui.item.label);
+			$("#type").val(ui.item.value);
+			return false;
+		},
+	});
+</script>
 
 <?php
 

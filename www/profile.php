@@ -1,6 +1,7 @@
 <?php
 	include_once "template.php";
 	begin_page("Wildbook");
+	logout_search();
 
 	if (isset($_GET['search'])) {
 		$search = $_GET['search'];

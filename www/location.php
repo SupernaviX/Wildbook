@@ -1,7 +1,8 @@
 <?php
 	include_once "template.php";
 	begin_page();
-
+	logout_search();
+	
 	$lname = $_GET["name"];
 	echo "<h4>$lname</h4><br/>";
 

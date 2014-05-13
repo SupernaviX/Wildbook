@@ -2,11 +2,12 @@
 	include_once "template.php";
 	begin_page();
 
-	$lname = $_GET["lname"];
+	$lname = $_GET["name"];
 	echo "<h4>$lname</h4><br/>";
 
 	$wildbook = connect_wildbook();
 	$loc_query = $wildbook->prepare("SELECT `lid`, `latitude`, `longitude` FROM `location` WHERE `lname` = ?");
+	$loc_query->bind_param("s", $lname);
 	$loc_query->execute();
 	$loc_query->bind_result($lid, $latitude, $longitude);
 	if ($loc_query->fetch()) {

@@ -2,8 +2,6 @@
 	include_once "template.php";
 	begin_page($_GET['aname']);
 	
-	
-	
 	$wildbook = connect_wildbook();
 	$aname_query = $wildbook->prepare('Select * from activity where aname =?');
 	if (!$aname_query) echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;

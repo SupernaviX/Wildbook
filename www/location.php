@@ -54,7 +54,7 @@
 		echo "Add an activity at this location <br>"; 
 		?>
 		<form action="like.php" method="post">
-		Activity:  <input name="aname" type="text" maxlength="30"/>
+		Activity:  <input name="saname" type="text" maxlength="30"/>
 		<input type="hidden" value="1" name="loc_add_act">
 		<input type="hidden" value="<?php echo $lid ?>" name="lid">
 		<input type="hidden" value="<?php echo $lname ?>" name="lname">

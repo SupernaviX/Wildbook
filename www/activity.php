@@ -14,7 +14,7 @@
 		?>
 		<form action="like.php" method="post">
 		<input type="hidden" value="<?php echo $aname ?>" name="aname">
-		<input type="submit" value="Like" />
+		<input type="submit" value="<?php if (aliked($aname)) echo "Unlike"; else echo "Like"; ?>" />
 		</form>
 		
 		

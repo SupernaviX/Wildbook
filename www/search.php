@@ -33,7 +33,7 @@
 		$relevant_posts->execute();
 		$relevant_posts->bind_result($did, $postername, $posteename, $title, $timestamp, $content);
 		while ($relevant_posts->fetch()) {
-			display_diary_post($did, $postername, $posteename, $title, $timestamp, $content);
+			display_diary_post($did, $postername, $posteename, $title, $timestamp, $term, $content);
 		}
 		$wildbook->close();
 	}
@@ -43,9 +43,9 @@
 		$relevant_posts = $wildbook->prepare("CALL postsabout(?, ?)");
 		$relevant_posts->bind_param("si", $term, $uid);
 		$relevant_posts->execute();
-		$relevant_posts->bind_result($did, $postername, $posteename, $title, $timestamp, $content);
+		$relevant_posts->bind_result($did, $postername, $posteename, $title, $timestamp, $lname, $content);
 		while ($relevant_posts->fetch()) {
-			display_diary_post($did, $postername, $posteename, $title, $timestamp, $content);
+			display_diary_post($did, $postername, $posteename, $title, $timestamp, $lname, $content);
 		}
 		$wildbook->close();
 	}

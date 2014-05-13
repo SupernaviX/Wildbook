@@ -59,16 +59,17 @@
 	echo "Posts <br> ------------------------------------------------- <br>";
 	$uid = user_id();
 	$distance = distance($uid, $search_uid);
-	$post_query = $wildbook->prepare('SELECT `did`, `username`, `title`, `timestamp`, `content` '
+	$post_query = $wildbook->prepare('SELECT `did`, `username`, `title`, `timestamp`, `lname`, `content` '
 		.'FROM `diarypost` `dp` '
 		.'JOIN `user` `u` ON `dp`.`posteruid` = `u`.`uid` '
+		.'LEFT JOIN `location` `l` ON `dp`.lid = `l`.`lid` '
 		.'WHERE `posteeuid` = ? AND `privacy` >= ? '
 		.'ORDER BY `timestamp` DESC;');
 	$post_query->bind_param("ii", $search_uid, $distance);
 	$post_query->execute();
-	$post_query->bind_result($did, $postername, $title, $timestamp, $content);
+	$post_query->bind_result($did, $postername, $title, $timestamp, $lname, $content);
 	while ($post_query->fetch()) {
-		display_diary_post($did, $postername, $search, $title, $timestamp, $content);
+		display_diary_post($did, $postername, $search, $title, $timestamp, $lname, $content);
 		echo "------------------------------------------------- <br>";
 	}
 	$wildbook->close();

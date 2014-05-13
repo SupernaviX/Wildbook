@@ -2,7 +2,7 @@
 	include_once "functions.php";
 
 	//Displays a diary post.
-	function display_diary_post($did, $postername, $posteename, $title, $timestamp, $content) {
+	function display_diary_post($did, $postername, $posteename, $title, $timestamp, $lname, $content) {
 		$wildbook = connect_wildbook();
 		$photo_query = $wildbook->prepare('SELECT `pid` FROM `photo` WHERE `did` = ?');
 		$video_query = $wildbook->prepare('SELECT `vid`, `content_type` FROM `video` WHERE `did` = ?');
@@ -19,7 +19,10 @@
 		else
 			echo "$postername -> $posteename <br/>";
 		echo $title; echo "<br/>";
-		echo $timestamp; echo "<br/>";
+		if (!empty($lname))
+			echo "$timestamp at $lname <br/>";
+		else
+			echo "$timestamp <br/>";
 		echo $content; echo "<br/>";
 
 		$photo_query->bind_param("i", $did);

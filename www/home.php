@@ -79,9 +79,9 @@
 	$diary_query->bind_param("i", $uid);
 	$diary_query->execute();
 	$diary_query->store_result();
-	$diary_query->bind_result($did, $postername, $posteename, $title, $timestamp, $content);
+	$diary_query->bind_result($did, $postername, $posteename, $title, $timestamp, $lname, $content);
 	while ($diary_query->fetch()) {
-		display_diary_post($did, $postername, $posteename, $title, $timestamp, $content);
+		display_diary_post($did, $postername, $posteename, $title, $timestamp, $lname, $content);
 		echo "---------------------------------------------<br>";
 	}
 	$wildbook->close();

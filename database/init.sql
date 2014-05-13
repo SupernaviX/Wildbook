@@ -117,23 +117,26 @@ create view wildbook.fof as
 -- All posts made on the user's wall
 -- All posts made by a friend that are shared with friends (or above)
 CREATE PROCEDURE wildbook.timeline(user_id INT(3)) READS SQL DATA
-	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, l.lname AS `lname`, dp.content AS `content`
 		FROM diarypost dp
 		JOIN user u1 ON dp.posteruid = u1.uid
 		JOIN user u2 ON dp.posteeuid = u2.uid
+		LEFT JOIN location l ON dp.lid = l.lid
 		WHERE dp.posteruid = user_id)
 	UNION DISTINCT
-	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, l.lname AS `lname`, dp.content AS `content`
 		FROM diarypost dp
 		JOIN user u1 ON dp.posteruid = u1.uid
 		JOIN user u2 ON dp.posteeuid = u2.uid
+		LEFT JOIN location l ON dp.lid = l.lid
 		WHERE dp.posteeuid = user_id)
 	UNION DISTINCT
-	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, l.lname AS `lname`, dp.content AS `content`
 		FROM diarypost dp
 		JOIN accepted_friends af ON dp.posteruid = af.seconduid
 		JOIN user u1 ON dp.posteruid = u1.uid
 		JOIN user u2 ON dp.posteeuid = u2.uid
+		LEFT JOIN location l ON dp.lid = l.lid
 		WHERE af.firstuid = user_id AND dp.privacy >= 2)
 	ORDER BY `timestamp` DESC;
 
@@ -189,20 +192,21 @@ CREATE PROCEDURE wildbook.postsin(location VARCHAR(30), user_id INT(3)) READS SQ
 -- All posts made by an FOF that are shared with FOFs(or above) and are about term
 -- All posts shared with everyone about term
 CREATE PROCEDURE wildbook.postsabout(term VARCHAR(65535), user_id INT(3)) READS SQL DATA
-	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, l.lname AS `lname`, dp.content AS `content`
 		FROM diarypost dp
 		JOIN user u1 ON dp.posteruid = u1.uid
 		JOIN user u2 ON dp.posteeuid = u2.uid
+		JOIN location l ON dp.lid = l.lid
 		WHERE dp.posteruid = user_id AND dp.content LIKE CONCAT('%', term, '%'))
 	UNION DISTINCT
-	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, l.lname AS `lname`, dp.content AS `content`
 		FROM diarypost dp
 		JOIN user u1 ON dp.posteruid = u1.uid
 		JOIN user u2 ON dp.posteeuid = u2.uid
 		JOIN location l ON dp.lid = l.lid
 		WHERE dp.posteeuid = user_id AND dp.content LIKE CONCAT('%', term, '%'))
 	UNION DISTINCT
-	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, l.lname AS `lname`, dp.content AS `content`
 		FROM diarypost dp
 		JOIN accepted_friends af ON dp.posteruid = af.seconduid
 		JOIN user u1 ON dp.posteruid = u1.uid
@@ -210,7 +214,7 @@ CREATE PROCEDURE wildbook.postsabout(term VARCHAR(65535), user_id INT(3)) READS 
 		JOIN location l ON dp.lid = l.lid
 		WHERE af.firstuid = user_id AND dp.privacy >= 2 AND dp.content LIKE CONCAT('%', term, '%'))
 	UNION DISTINCT
-	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, l.lname AS `lname`, dp.content AS `content`
 		FROM diarypost dp
 		JOIN fof ON dp.posteruid = fof.seconduid
 		JOIN user u1 ON dp.posteruid = u1.uid
@@ -218,7 +222,7 @@ CREATE PROCEDURE wildbook.postsabout(term VARCHAR(65535), user_id INT(3)) READS 
 		JOIN location l ON dp.lid = l.lid
 		WHERE fof.firstuid = user_id AND dp.privacy >= 3 AND dp.content LIKE CONCAT('%', term, '%'))
 	UNION DISTINCT
-	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, dp.content AS `content`
+	(SELECT dp.did AS `did`, u1.username AS `postername`, u2.username AS `posteename`, dp.title AS `title`, dp.timestamp AS `timestamp`, l.lname AS `lname`, dp.content AS `content`
 		FROM diarypost dp
 		JOIN user u1 ON dp.posteruid = u1.uid
 		JOIN user u2 ON dp.posteeuid = u2.uid

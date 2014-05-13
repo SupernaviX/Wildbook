@@ -45,29 +45,35 @@
 
 	echo "Friend Requests <br> ------------------------------------------------- <br>";
 	$wildbook = connect_wildbook();
-	$req_query = $wildbook->prepare("SELECT `requester` FROM `request` WHERE `requestee` = ?;");
+	$req_query = $wildbook->prepare("SELECT `requester` FROM `request` WHERE `requestee` = ?");
 	$req_query->bind_param("i", $_SESSION["current_user_id"]);
 	$req_query->execute();
+	$req_query->store_result();
 	$req_query->bind_result($reqid);
 	while ($req_query->fetch()) {
 		$request = get_username($reqid);		
 		echo "<a href=\"profile.php?search=$request\">$request</a> <br>"; 	
 	}
+	$wildbook->close();
 	
 	echo "Your Friends <br> ------------------------------------------------- <br>";
+	$wildbook = connect_wildbook();
 	$friend_query = $wildbook->prepare("SELECT `username` FROM `user` WHERE `uid` = (SELECT `seconduid` FROM `accepted_friends` WHERE `firstuid` = ?)");
 	$uid = user_id();
 	$friend_query->bind_param("i", $uid);
 	$friend_query->execute();
+	$friend_query->store_result();
 	$friend_query->bind_result($username);
 	while ($friend_query->fetch()) {
 		echo "<a href=\"profile.php?search=$username\">$username</a> <br>";
 	}
+	$wildbook->close();
 
 	echo "Add a Diary Post <br>";
 	display_diary_post_submission_form($uid);
 
 	echo "Your timeline <br> ---------------------------------------------<br> ";
+	$wildbook = connect_wildbook();
 	$diary_query = $wildbook->prepare('CALL timeline(?)');
 
 	$diary_query->bind_param("i", $uid);
@@ -78,18 +84,20 @@
 		display_diary_post($did, $postername, $posteename, $title, $timestamp, $content);
 		echo "---------------------------------------------<br>";
 	}
+	$wildbook->close();
 	
 	echo "Your liked activities <br> ------------------------------------------<br>";
+	$wildbook = connect_wildbook();
 	$activity_query = $wildbook->prepare('SELECT `aname` FROM `useractivity` WHERE `uid` = ?');
 	if (!$activity_query) echo "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
 	$activity_query->bind_param("i", $_SESSION["current_user_id"] );
 	$activity_query->execute();
+	$activity_query->store_result();
 	$activity_query->bind_result($aname);
 	while ($activity_query->fetch()) {
 		echo "<a href=\"activity.php?aname=$aname\">$aname</a> <br>";
 	}
-
-	
 	$wildbook->close();
+
 	end_page();
 ?>

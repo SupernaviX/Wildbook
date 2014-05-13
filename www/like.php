@@ -4,7 +4,7 @@
 	
 	$wildbook = connect_wildbook();
 	
-	/*activty and activity&location likes*/
+	/*Add activity to a location, search to see if activity exists*/
 	if ( isset($_POST['saname'], $_POST['lid'],$_POST['lname'],$_POST['loc_add_act']) ) {
 		$lname = $_POST['lname'];
 		$aname_query = $wildbook->prepare('select 1 from activity where aname = ?');
@@ -22,18 +22,20 @@
 			
 		}
 		else {
-			echo $_POST['aname'] . " does not exist<br>";
+			echo $_POST['saname'] . " does not exist<br>";
 			?> <a href="location.php?name=<?php echo $lname ?>">Back</a><br> <?php
 			
 		}
 	}
-	if(isset($_POST['lid'],$_POST['lname'])) {		
+	
+	elseif(isset($_POST['lid'],$_POST['lname'])) {		
 		$lname = $_POST['lname'];
 		$add_useractloc = $wildbook->prepare('INSERT INTO `useractivitylocation`(`uid`, `aname`,`lid`) VALUES(?,?,?);');
 		$add_useractloc->bind_param("isi", $_SESSION['current_user_id'], $_POST['aname'], $_POST['lid']);
 		if(!$add_useractloc->execute()) echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
 		header("location:location.php?name=$lname");
 	}		
+	/*add location to an activity
 	else if (isset($_POST['aname'])) {	
 		$aname = $_POST['aname'];
 		$add_useractivity = $wildbook->prepare('INSERT INTO `useractivity`(`uid`, `aname`) VALUES(?,?);');
@@ -41,7 +43,7 @@
 		$add_useractivity->bind_param("is",$_SESSION['current_user_id'],$_POST['aname']);
 		if(!$add_useractivity->execute()) echo "Execute failed: (" . $wildbook->errno . ") " . $wildbook->error;
 		header("location:activity.php?aname=$aname");
-	}
+	}*/
 	/*diarypost  likes*/
 	if (isset($_POST['did'])) {
 		echo $_POST['did'];

@@ -26,13 +26,13 @@ function end_page() {
 
 function logout_search() {
 	echo "<a href=\"logout.php\">Logout</a> <br><br><br>";
+	
 	echo '<form id="searchform" action="search.php" method="POST">' .
 		'<label name="term">Search:</label>' .
 		'<input id="search" name="term" type="text" />' .
 		'<input id="type" name="type" type="hidden" />' .
 		'<input type="submit" value ="Search"/>' .
-	'</form>' .
-
+	'</form>'.
 	'<script type="text/javascript">'.
 		'$.widget("custom.uberAutocomplete", $.ui.autocomplete, {'.
 			'_renderItem: function( ul, item ) {'.

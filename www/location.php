@@ -31,9 +31,7 @@
 	</form>
 <?php } 
 
-	else {
-		echo $lname ."<br>";
-		
+	else {		
 		echo "Activities at this location <br> --------------------------------------------------- <br>";
 		$user_act_query = $wildbook->prepare("SELECT `aname` FROM `useractivitylocation` WHERE `lid` = ?");
 		if (!$user_act_query) echo  "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;

@@ -136,4 +136,5 @@ function distance($firstuid, $seconduid) {
 	else if ($fof) return 3;
 	else return 4;
 }
+
 ?>

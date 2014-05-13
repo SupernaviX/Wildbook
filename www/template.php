@@ -13,6 +13,9 @@ function begin_page($title = "Wildbook") {
 					."body { height: 100% }\n"
 					."#my-map { height: 100% }\n"
 				."</style>\n"
+				.'<style type="text/css" src="styles/jquery-ui-1.10.4.custom.min.css"></style>'
+				.'<script type="text/javascript" src="scripts/jquery-1.10.2.js"></script>'
+				.'<script type="text/javascript" src="scripts/jquery-ui-1.10.4.custom.min.js"></script>'
 			."</head>"
 			."<body>";
 }

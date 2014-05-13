@@ -65,49 +65,52 @@
 	}
 
 
-	function display_diary_post_submission_form($posteeid, $title = "", $content = "", $privacy = 2, $errors = array()) {
-		echo '<form enctype="multipart/form-data" action="adddiarypost.php" method="post">';
+	function display_diary_post_submission_form($posteeid, $title = "", $content = "", $privacy = 2, $errors = array()) { ?>
+		<form enctype="multipart/form-data" action="adddiarypost.php" method="post">
 
-		echo '<input type="hidden" name="posteeuid" value="' . $posteeid . '" />';
+		<input type="hidden" name="posteeuid" value="' . $posteeid . '" />
 
-		echo '<label name="title">Title:</label>'
-			.'<input name="title" type="text" maxlength="30" value="'. $title .'" />'
-			.list_errors($errors, "title")
-			.'<br />';
+		<label name="title">Title:</label>
+		<input name="title" type="text" maxlength="30" value="<?php echo $title ?>" />
+		<?php echo list_errors($errors, "title") ?>
+		<br />
 
-		echo '<label name="content">Content:</label>'
-			.'<textarea name="content">' . $content .'</textarea>'
-			.list_errors($errors, "content")
-			.'<br />';
+		<label name="content">Content:</label>
+		<textarea name="content"><?php echo $content ?></textarea>
+		<?php echo list_errors($errors, "content") ?>
+		<br />
 
-		echo '<label name="privacy">Share with:</label>'
-			.'<select name="privacy">'
-			.select_option(1, "Private", $privacy)
-			.select_option(2, "Friends", $privacy)
-			.select_option(3, "Friends of Friends", $privacy)
-			.select_option(4, "Everyone", $privacy)
-			.'</select>'
-			.list_errors($errors, "privacy")
-			.'<br />';
+		<label name="privacy">Share with:</label>
+		<select name="privacy">
+		<?php
+			echo select_option(1, "Private", $privacy)
+				.select_option(2, "Friends", $privacy)
+				.select_option(3, "Friends of Friends", $privacy)
+				.select_option(4, "Everyone", $privacy)
+		?>
+		</select>
+		<?php echo list_errors($errors, "privacy") ?>
+		<br />
 
-		echo '<label name="photos[]">Photos:</label>'
-			.'<input name="photos[]" type="file" accept="image/*" multiple="multiple"/>'
-			.list_errors($errors, "photos[]")
-			.'<br />';
+		<label name="photos[]">Photos:</label>
+		<input name="photos[]" type="file" accept="image/*" multiple="multiple"/>
+		<?php echo list_errors($errors, "photos[]") ?>
+		<br />
 
-		echo '<label name="videos[]">Videos:</label>'
-			.'<input name="videos[]" type="file" accept="video/*" multiple="multiple"/>'
-			.list_errors($errors, "videos[]")
-			.'<br />';
+		<label name="videos[]">Videos:</label>
+		<input name="videos[]" type="file" accept="video/*" multiple="multiple"/>
+		<?php echo list_errors($errors, "videos[]") ?>
+		<br />
 
-		echo '<label name="audio[]">Audio:</label>'
-			.'<input name="audio[]" type="file" accept="audio/*" multiple="multiple"/>'
-			.list_errors($errors, "audio[]")
-			.'<br />';
+		<label name="audio[]">Audio:</label>
+		<input name="audio[]" type="file" accept="audio/*" multiple="multiple"/>
+		<?php echo list_errors($errors, "audio[]") ?>
+		<br />
 
-		echo '<input type="submit" />';
-		echo '</form>';
-	}
+		<input type="submit" />
+		</form>
+		
+	<?php }
 
 	function list_errors($error_list, $input_name) {
 		if (empty($input_name) || !array_key_exists($input_name, $error_list))

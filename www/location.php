@@ -41,14 +41,26 @@
 		$user_act_query->store_result();
 		$user_act_query->bind_result($aname);
 		while ($user_act_query->fetch()) {
-			echo "$aname";
+			echo "<br>$aname";
 			?>
 			<form action="like.php" method="post">
 			<input type="hidden" value="<?php echo $aname ?>" name="aname">
 			<input type="hidden" value="<?php echo $lid ?>" name="lid">
-			<input type="submit" value="Like" />
+			<input type="hidden" value="<?php echo $lname ?>" name="lname">
+			<input type="submit" value="Like" /><br>
 			<?php
 		}
+		
+		echo "Add an activity at this location <br>"; 
+		?>
+		<form action="like.php" method="post">
+		Activity:  <input name="aname" type="text" maxlength="30"/>
+		<input type="hidden" value="1" name="loc_add_act">
+		<input type="hidden" value="<?php echo $lid ?>" name="lid">
+		<input type="hidden" value="<?php echo $lname ?>" name="lname">
+		<input type="submit" value="Like" />		
+		
+		<?php
 		
 	}
 ?>

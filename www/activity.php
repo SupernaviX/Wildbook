@@ -17,9 +17,12 @@
 		<input type="hidden" value="<?php echo $aname ?>" name="aname">
 		<input type="submit" value="Like" />
 		</form>
+		
+		
 		<?php
 	}
 	else {
+		echo "Activity $aname does not exist<br>";
 		$aname_like = $wildbook->prepare('Select * from activity where aname like ?');
 		$like = "%".$aname."%";
 		$aname_like->bind_param("s",$like);
@@ -29,7 +32,13 @@
 			echo "Did you mean <a href=\"activity.php?aname=$like_aname\">$like_aname</a> <br>";
 		}	
 		
-		echo "Or would you like to add $aname to the list of activities? <br>";
+		echo "Would you like to add $aname to the list of activities? <br>";
+		?>
+		<form action="addactivity.php" method="post">
+		<input type="hidden" value="<?php echo $aname ?>" name="aname">
+		<input type="submit" value="Yes" />
+		</form>		
+		<?php
 	}
 	
 	

@@ -21,6 +21,17 @@ function user_exists($username) {
 	return $exists;
 }
 
+function get_lid($lname) {
+	$wildbook = connect_wildbook();
+	$duplicate_check = $wildbook->prepare("SELECT `lid` FROM `location` WHERE `lname` = ?");
+	$duplicate_check->bind_param("s", $lname);
+	$duplicate_check->execute();
+	$duplicate_check->bind_result($lid);
+	$duplicate_check->fetch();
+	$wildbook->close();
+	return $lid;
+}
+
 function login($username, $uid) {
 	$_SESSION['current_user_name'] = $username;
 	$_SESSION['current_user_id'] = $uid;

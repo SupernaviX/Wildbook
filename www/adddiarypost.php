@@ -13,12 +13,23 @@
 			$posteeuid = $_POST["posteeuid"];
 		else
 			$posteeuid = user_id();
+
+		if (!empty($_POST["lname"])) {
+			$lname = $_POST["lname"];
+			$lid = get_lid($lname);
+			if (empty($lid)) {
+				$errors["lname"][] = "No location with this name exists";
+			}
+		}
+		else
+			$lid = NULL;
+
 		$content = $_POST["content"];
 		$privacy = intval($_POST["privacy"]);
 		if ($privacy < 1 || $privacy > 4) {
 			$errors["privacy"][] = "Invalid privacy level";
 		}
-		if (!empty($_FILES["photos"])) {
+		if (!empty($_FILES["photos"]) && !empty($_FILES["photos"]["errors"])) {
 			$photo_upload_error = false;
 			foreach ($_FILES["photos"]["errors"] as $error) {
 				if ($error > 0) {
@@ -27,7 +38,7 @@
 				}
 			}
 		}
-		if (!empty($_FILES["audio"])) {
+		if (!empty($_FILES["audio"]) && !empty($_FILES["audio"]["errors"])) {
 			$audio_upload_error = false;
 			foreach ($_FILES["audio"]["errors"] as $error) {
 				if ($error > 0) {
@@ -36,7 +47,7 @@
 				}
 			}
 		}
-		if (!empty($_FILES["videos"])) {
+		if (!empty($_FILES["videos"]) && !empty($_FILES["videos"]["errors"])) {
 			$video_upload_error = false;
 			foreach ($_FILES["videos"]["errors"] as $error) {
 				if ($error > 0) {
@@ -48,10 +59,10 @@
 		if (empty($errors)) {
 			$wildbook = connect_wildbook();
 			$make_post = $wildbook->prepare(
-				'INSERT INTO `diarypost` (`posteruid`, `posteeuid`, `title`, `timestamp`, `content`, `privacy`)
-					VALUES (?, ?, ?, NOW(), ?, ?);');
+				'INSERT INTO `diarypost` (`posteruid`, `posteeuid`, `title`, `timestamp`, `lid`, `content`, `privacy`)
+					VALUES (?, ?, ?, NOW(), ?, ?, ?);');
 			$uid = user_id();
-			$make_post->bind_param("iissi", $uid, $posteeuid, $title, $content, $privacy);
+			$make_post->bind_param("iisisi", $uid, $posteeuid, $title, $lid, $content, $privacy);
 			$make_post->execute();
 			$did = $make_post->insert_id;
 
@@ -94,5 +105,5 @@
 	if (empty($posteeuid)) {
 		$posteeuid = user_id();
 	}
-	display_diary_post_submission_form($posteeuid, $title, $content, $privacy, $errors);
+	display_diary_post_submission_form($posteeuid, $title, $content, $lname, $privacy, $errors);
 ?>

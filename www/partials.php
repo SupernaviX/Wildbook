@@ -65,10 +65,10 @@
 	}
 
 
-	function display_diary_post_submission_form($posteeid, $title = "", $content = "", $privacy = 2, $errors = array()) { ?>
+	function display_diary_post_submission_form($posteeid, $title = "", $content = "", $lname = "", $privacy = 2, $errors = array()) { ?>
 		<form enctype="multipart/form-data" action="adddiarypost.php" method="post">
 
-		<input type="hidden" name="posteeuid" value="' . $posteeid . '" />
+		<input type="hidden" name="posteeuid" value="<?php echo $posteeid ?>" />
 
 		<label name="title">Title:</label>
 		<input name="title" type="text" maxlength="30" value="<?php echo $title ?>" />
@@ -78,6 +78,11 @@
 		<label name="content">Content:</label>
 		<textarea name="content"><?php echo $content ?></textarea>
 		<?php echo list_errors($errors, "content") ?>
+		<br />
+
+		<label name="lname">Location:</label>
+		<input name="lname" type="text" value="<?php echo $lname ?>" />
+		<?php echo list_errors($errors, "lname") ?>
 		<br />
 
 		<label name="privacy">Share with:</label>
@@ -109,7 +114,14 @@
 
 		<input type="submit" />
 		</form>
-		
+
+		<script type="text/javascript">
+			$(function() {
+				$('[name="lname"]').autocomplete({
+					source: "search/locations.php"
+				});
+			})
+		</script>
 	<?php }
 
 	function list_errors($error_list, $input_name) {

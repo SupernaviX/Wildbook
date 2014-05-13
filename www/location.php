@@ -59,6 +59,7 @@
 		<input type="hidden" value="<?php echo $lid ?>" name="lid">
 		<input type="hidden" value="<?php echo $lname ?>" name="lname">
 		<input type="submit" value="Like" />		
+		</form>
 		
 		<?php
 		
@@ -103,11 +104,12 @@
 					map: map,
 					title: lname
 				});
-
+				$("#lat").val(marker.getPosition().lat());
+				$("#lng").val(marker.getPosition().lng());
 				map.setCenter(marker.getPosition());
 				google.maps.event.addListener(map, 'click', function(event) {
-					document.getElementById("lat").value = event.latLng.lat();
-					document.getElementById("lng").value = event.latLng.lng();
+					$("#lat").val(event.latLng.lat());
+					$("#lng").val(event.latLng.lng());
 					marker.setPosition(event.latLng);
 				});
 			}

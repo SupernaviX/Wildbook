@@ -20,7 +20,7 @@
 	$.widget("custom.uberAutocomplete", $.ui.autocomplete, {
 		_renderItem: function( ul, item ) {
 			var renderString = (item.value != "")
-				? item.label + "(" + item.value + ")"
+				? item.label + " (" + item.value + ")"
 				: item.label;
 			return $( "<li>" )
 				.append( $( "<a>" ).text( renderString ) )

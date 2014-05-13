@@ -5,6 +5,7 @@
 	$wildbook = connect_wildbook();
 	
 	/*Add activity to a location, search to see if activity exists*/
+	
 	if ( isset($_POST['saname'], $_POST['lid'],$_POST['lname'],$_POST['loc_add_act']) ) {
 		$lname = $_POST['lname'];
 		$aname_query = $wildbook->prepare('select 1 from activity where aname = ?');
@@ -28,7 +29,7 @@
 		}
 	}
 	
-	elseif(isset($_POST['lid'],$_POST['lname'])) {		
+	else if(isset($_POST['lid'],$_POST['lname'])) {		
 		$lname = $_POST['lname'];
 		$add_useractloc = $wildbook->prepare('INSERT INTO `useractivitylocation`(`uid`, `aname`,`lid`) VALUES(?,?,?);');
 		$add_useractloc->bind_param("isi", $_SESSION['current_user_id'], $_POST['aname'], $_POST['lid']);

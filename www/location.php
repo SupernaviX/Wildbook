@@ -46,7 +46,8 @@
 			<input type="hidden" value="<?php echo $aname ?>" name="aname">
 			<input type="hidden" value="<?php echo $lid ?>" name="lid">
 			<input type="hidden" value="<?php echo $lname ?>" name="lname">
-			<input type="submit" value="Like" /><br>
+			<input type="submit" value="Like" />
+			</form><br>
 			<?php
 		}
 		

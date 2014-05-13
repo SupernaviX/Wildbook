@@ -140,12 +140,18 @@ function distance($firstuid, $seconduid) {
 /*checks if activity is liked already*/
 function aliked($aname) {
 	$wildbook = connect_wildbook();
-	$liked_query = $wildbook->prepare("select 1 from useractivity where uid = ?");
-	$liked_query->bind_param("i", $_SESSION['current_user_id']);
+	$liked_query = $wildbook->prepare("select 1 from useractivity where uid = ? and aname = ?");
+	$liked_query->bind_param("is", $_SESSION['current_user_id'],$aname);
 	$liked_query->execute();
 	return ($liked_query->fetch());
 }
 
 /*checks if location/activity is liked already*/
-
+function alliked($aname,$lid) {
+	$wildbook = connect_wildbook();
+	$liked_query = $wildbook->prepare("select 1 from useractivitylocation where uid = ? and aname = ? and lid = ?");
+	$liked_query->bind_param("i", $_SESSION['current_user_id'], $aname, $lid);
+	$liked_query->execute();
+	return ($liked_query->fetch());
+}
 ?>

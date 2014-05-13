@@ -12,6 +12,7 @@
 											.'JOIN `user` `u` ON `c`.`uid` = `u`.`uid` '
 											.'WHERE `did` = ? '
 											.'ORDER BY `timestamp`');
+		$likes_query = $wildbook->prepare('CALL count_likes(?)');
 
 		echo "<div style=\"max-width: 75%\">";
 		if ($postername === $posteename)
@@ -46,6 +47,14 @@
 			echo "<audio controls><source src=\"audio.php?id=$aid\" type=\"$content_type\"></audio><br/>";
 		}
 
+		$likes_query->bind_param("i",$did);
+		$likes_query->execute();
+		$likes_query->bind_result($likes_count);
+		$likes_query->fetch();
+		if ($likes_count > 0) {
+			echo "-------------------------------------------------------<br>" .$likes_count ." people like this <br>";
+		}
+		
 		echo '<div style="margin-left: 20px">';
 		$comments_query->bind_param("i", $did);
 		$comments_query->execute();
@@ -54,7 +63,12 @@
 			echo "<div><em>$commenter replied at $timestamp</em>"
 				."<pre>$message</pre></div>";
 		}
-
+		
+		echo '<form action="like.php" method="post">'.
+			'<input type="hidden" value="' . $did . '" name="did">' .
+			'<input type="submit" value="Like" />'.
+			'</form>';
+		
 		echo '<div><form action="addcomment.php" method="post">'
 			.'<input type="hidden" name="did" value="' . $did . '" />'
 			.'<input type="hidden" name="posteename" value="' . $posteename . '" />'

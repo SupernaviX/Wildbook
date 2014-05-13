@@ -9,6 +9,7 @@
 	$loc_query = $wildbook->prepare("SELECT `lid`, `latitude`, `longitude` FROM `location` WHERE `lname` = ?");
 	$loc_query->bind_param("s", $lname);
 	$loc_query->execute();
+	$loc_query->store_result();
 	$loc_query->bind_result($lid, $latitude, $longitude);
 	if ($loc_query->fetch()) {
 		$exists = true;
@@ -27,7 +28,31 @@
 		<input id="lng" type="hidden" name="longitude" value="<?php echo $longitude ?>" />
 		<input type="submit" value="Create" ?>
 	</form>
-<?php } ?>
+<?php } 
+
+	else {
+		echo $lname ."<br>";
+		
+		echo "Activities at this location <br> --------------------------------------------------- <br>";
+		$user_act_query = $wildbook->prepare("SELECT `aname` FROM `useractivitylocation` WHERE `lid` = ?");
+		if (!$user_act_query) echo  "Prepare failed: (" . $wildbook->errno . ") " . $wildbook->error;
+		$user_act_query->bind_param("i",$lid);		
+		$user_act_query->execute();
+		$user_act_query->store_result();
+		$user_act_query->bind_result($aname);
+		while ($user_act_query->fetch()) {
+			echo "$aname";
+			?>
+			<form action="like.php" method="post">
+			<input type="hidden" value="<?php echo $aname ?>" name="aname">
+			<input type="hidden" value="<?php echo $lid ?>" name="lid">
+			<input type="submit" value="Like" />
+			<?php
+		}
+		
+	}
+?>
+
 
 <div style="width: 50%">
 	<div id="my-map" style="width: 100%; height: 100%;"/>
@@ -82,7 +107,7 @@
 	google.maps.event.addDomListener(window, 'load', initialize);
 </script>
 
-
+<a href="home.php">Home</a>
 <?php
 	end_page();
 ?>

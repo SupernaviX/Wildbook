@@ -247,3 +247,8 @@ CREATE PROCEDURE wildbook.search(term VARCHAR(65535)) READS SQL DATA
 		FROM `location`
 		WHERE `lname` LIKE CONCAT('%', term, '%'))
 	ORDER BY CHAR_LENGTH(`name`);
+	
+create procedure count_likes (diary_id int(3)) 
+select count(distinct uid) 
+from diarylike 
+where did = diary_id;
